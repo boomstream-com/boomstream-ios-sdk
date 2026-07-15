@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# SwiftPM
+/.build/
+/Packages/
+Package.resolved
+
+# Xcode
+xcuserdata/
+DerivedData/
+*.xcscmblueprint
+*.xccheckout
+.swiftpm/
+
+# IDE
+.idea/
+
+# Secrets — только *.example коммитится
+Config.xcconfig
+
+# Example app secrets
+Example/Config/Local.xcconfig

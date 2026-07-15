@@ -1,0 +1,7 @@
+// Скопируйте в Local.xcconfig (gitignored) и заполните.
+// BOOMSTREAM_API_KEY — опционален: нужен только для вкладки Library (листинги).
+// Плеер и загрузки работают без него.
+BOOMSTREAM_API_KEY = your-api-key
+BOOMSTREAM_UA_TOKEN = your-ua-allow-token
+BOOMSTREAM_CONFIG_BASE = https:/$()/play.boomstream.com/
+BOOMSTREAM_DEMO_MEDIA_CODE = XXXXXXXX

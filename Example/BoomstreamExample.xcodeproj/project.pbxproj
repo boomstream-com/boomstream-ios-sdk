@@ -1,0 +1,376 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		14C3F411581789C3B06E0AB6 /* BoomstreamAPI in Frameworks */ = {isa = PBXBuildFile; productRef = 914A8AB3885BEE6C2D218F95 /* BoomstreamAPI */; };
+		2B039F64B545690FCB7EA1BA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CA41BE9A43EFCA6FCBA9DD /* ContentView.swift */; };
+		3CA2648E19AC7E4DD16AEDB8 /* MediaTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 453F576CF4C28CCFFE5A9D8D /* MediaTabView.swift */; };
+		5C4414C13320FE5E0B948B61 /* BoomstreamPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 5FBAA8171A74E0794E7A3912 /* BoomstreamPlayer */; };
+		9249F010EEFF125993BD4899 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2156EC0A4F3611E8E94F63D4 /* MainViewModel.swift */; };
+		CA8A652B12AF0059F8352EA2 /* BoomstreamExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 593342524CB190034CF8D80A /* BoomstreamExampleApp.swift */; };
+		F0B1DDA058487430C13D0D2E /* PlayerAPITabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B923F598535D4F997715B74F /* PlayerAPITabView.swift */; };
+		FEBB5AA927FEC5EE95249777 /* BoomstreamOffline in Frameworks */ = {isa = PBXBuildFile; productRef = 5939F37248F8C2A99451F6F1 /* BoomstreamOffline */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2156EC0A4F3611E8E94F63D4 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		40FD88FD1F43A54C5C8DED2D /* boomstream-ios-sdk */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "boomstream-ios-sdk"; path = ..; sourceTree = SOURCE_ROOT; };
+		453F576CF4C28CCFFE5A9D8D /* MediaTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaTabView.swift; sourceTree = "<group>"; };
+		593342524CB190034CF8D80A /* BoomstreamExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoomstreamExampleApp.swift; sourceTree = "<group>"; };
+		8701337BB0A1AAAF2ABE0C36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A4B505DA7A3F754DA5C0342F /* BoomstreamExample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BoomstreamExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B923F598535D4F997715B74F /* PlayerAPITabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerAPITabView.swift; sourceTree = "<group>"; };
+		D1CA41BE9A43EFCA6FCBA9DD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		DA6817645E20F9978EDF1837 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A270A3E35E722CE8750A23D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14C3F411581789C3B06E0AB6 /* BoomstreamAPI in Frameworks */,
+				5C4414C13320FE5E0B948B61 /* BoomstreamPlayer in Frameworks */,
+				FEBB5AA927FEC5EE95249777 /* BoomstreamOffline in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		02959A9FBA9E8DC4C92F3B59 /* BoomstreamExample */ = {
+			isa = PBXGroup;
+			children = (
+				593342524CB190034CF8D80A /* BoomstreamExampleApp.swift */,
+				D1CA41BE9A43EFCA6FCBA9DD /* ContentView.swift */,
+				8701337BB0A1AAAF2ABE0C36 /* Info.plist */,
+				2156EC0A4F3611E8E94F63D4 /* MainViewModel.swift */,
+				453F576CF4C28CCFFE5A9D8D /* MediaTabView.swift */,
+				B923F598535D4F997715B74F /* PlayerAPITabView.swift */,
+			);
+			path = BoomstreamExample;
+			sourceTree = "<group>";
+		};
+		398CA91DD7407AD664751F93 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				DA6817645E20F9978EDF1837 /* Base.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		7DBB183F020C6BCCFF0EDE84 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				40FD88FD1F43A54C5C8DED2D /* boomstream-ios-sdk */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		DD2E3F081FF6B55A75B20283 = {
+			isa = PBXGroup;
+			children = (
+				02959A9FBA9E8DC4C92F3B59 /* BoomstreamExample */,
+				398CA91DD7407AD664751F93 /* Config */,
+				7DBB183F020C6BCCFF0EDE84 /* Packages */,
+				F06CD8BEF8BCCF5CF663116A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F06CD8BEF8BCCF5CF663116A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A4B505DA7A3F754DA5C0342F /* BoomstreamExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A12D6CF49E739FE2A7C9EF14 /* BoomstreamExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 243FD425303B0027064A00E4 /* Build configuration list for PBXNativeTarget "BoomstreamExample" */;
+			buildPhases = (
+				0BC6FEBC47757362DAED041B /* Sources */,
+				A270A3E35E722CE8750A23D8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BoomstreamExample;
+			packageProductDependencies = (
+				914A8AB3885BEE6C2D218F95 /* BoomstreamAPI */,
+				5FBAA8171A74E0794E7A3912 /* BoomstreamPlayer */,
+				5939F37248F8C2A99451F6F1 /* BoomstreamOffline */,
+			);
+			productName = BoomstreamExample;
+			productReference = A4B505DA7A3F754DA5C0342F /* BoomstreamExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		622C2BF8F448D48DA614A6AF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					A12D6CF49E739FE2A7C9EF14 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 4EC16F8BEEB6F3525A47A293 /* Build configuration list for PBXProject "BoomstreamExample" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = DD2E3F081FF6B55A75B20283;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				363D0DDAB0484CAE738992FB /* XCLocalSwiftPackageReference "..//" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F06CD8BEF8BCCF5CF663116A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A12D6CF49E739FE2A7C9EF14 /* BoomstreamExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0BC6FEBC47757362DAED041B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CA8A652B12AF0059F8352EA2 /* BoomstreamExampleApp.swift in Sources */,
+				2B039F64B545690FCB7EA1BA /* ContentView.swift in Sources */,
+				9249F010EEFF125993BD4899 /* MainViewModel.swift in Sources */,
+				3CA2648E19AC7E4DD16AEDB8 /* MediaTabView.swift in Sources */,
+				F0B1DDA058487430C13D0D2E /* PlayerAPITabView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		40C1A2886F1C79368000FC50 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DA6817645E20F9978EDF1837 /* Base.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = BoomstreamExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boomstream.sdk.BoomstreamExample;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A25E8F68CD88E908558BAE01 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		BE9F4DC58356F8F30C7BD607 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		CC629C599AA56DBDCC7BD850 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DA6817645E20F9978EDF1837 /* Base.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = BoomstreamExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.boomstream.sdk.BoomstreamExample;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		243FD425303B0027064A00E4 /* Build configuration list for PBXNativeTarget "BoomstreamExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC629C599AA56DBDCC7BD850 /* Debug */,
+				40C1A2886F1C79368000FC50 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4EC16F8BEEB6F3525A47A293 /* Build configuration list for PBXProject "BoomstreamExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A25E8F68CD88E908558BAE01 /* Debug */,
+				BE9F4DC58356F8F30C7BD607 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		363D0DDAB0484CAE738992FB /* XCLocalSwiftPackageReference "..//" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "..//";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5939F37248F8C2A99451F6F1 /* BoomstreamOffline */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BoomstreamOffline;
+		};
+		5FBAA8171A74E0794E7A3912 /* BoomstreamPlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BoomstreamPlayer;
+		};
+		914A8AB3885BEE6C2D218F95 /* BoomstreamAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = BoomstreamAPI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 622C2BF8F448D48DA614A6AF /* Project object */;
+}

@@ -1,0 +1,48 @@
+# Xcode-проект генерится XcodeGen'ом: `cd Example && xcodegen generate`
+# (.xcodeproj закоммичен — регенерация нужна только при изменении этого файла)
+name: BoomstreamExample
+options:
+  bundleIdPrefix: com.boomstream.sdk
+  deploymentTarget:
+    iOS: "15.0"
+  xcodeVersion: "16.0"
+
+packages:
+  BoomstreamSDK:
+    path: ../
+
+targets:
+  BoomstreamExample:
+    type: application
+    platform: iOS
+    sources: [BoomstreamExample]
+    configFiles:
+      Debug: Config/Base.xcconfig
+      Release: Config/Base.xcconfig
+    info:
+      path: BoomstreamExample/Info.plist
+      properties:
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        # Значения приходят из Config/Local.xcconfig (gitignored) через build settings.
+        BoomstreamAPIKey: $(BOOMSTREAM_API_KEY)
+        BoomstreamUAToken: $(BOOMSTREAM_UA_TOKEN)
+        BoomstreamConfigBase: $(BOOMSTREAM_CONFIG_BASE)
+        BoomstreamDemoMediaCode: $(BOOMSTREAM_DEMO_MEDIA_CODE)
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_STYLE: Automatic
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 0.1.0
+    dependencies:
+      - package: BoomstreamSDK
+        product: BoomstreamAPI
+      - package: BoomstreamSDK
+        product: BoomstreamPlayer
+      - package: BoomstreamSDK
+        product: BoomstreamOffline

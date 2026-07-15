@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+    tags: ['v*']
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build (host)
+        run: swift build --build-tests
+      - name: Test (host)
+        run: swift test
+      - name: Build (iOS Simulator)
+        run: |
+          xcodebuild build \
+            -scheme BoomstreamSDK-Package \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO
+
+  example-app:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build example app (no signing; Base.xcconfig defaults, secrets not required)
+        run: |
+          xcodebuild build \
+            -project Example/BoomstreamExample.xcodeproj \
+            -scheme BoomstreamExample \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO
+
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sh ci/boo-ref-gate.sh
+      - run: sh ci/secret-grep-gate.sh
+      - run: sh ci/zero-deps-gate.sh
+
+  release-gate:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build-test, example-app, gates]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify tag matches SDK version and CHANGELOG
+        run: sh ci/verify-release.sh "${GITHUB_REF_NAME#v}"

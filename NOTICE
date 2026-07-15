@@ -1,0 +1,6 @@
+Boomstream iOS SDK
+Copyright 2026 Boomstream / HWD ltd
+
+This product deliberately includes no third-party software components
+(zero-dependency policy, see docs/SDK_ARCHITECTURE.md). It links only
+against Apple system frameworks (Foundation, AVFoundation, SwiftUI, UIKit).

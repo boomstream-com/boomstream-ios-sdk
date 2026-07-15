@@ -1,0 +1,9 @@
+// Committed defaults. Секреты — в Local.xcconfig (gitignored),
+// шаблон: Local.xcconfig.example. Никогда не коммитьте реальные ключи.
+BOOMSTREAM_API_KEY =
+BOOMSTREAM_UA_TOKEN =
+// $() — чтобы xcconfig не принял // за комментарий
+BOOMSTREAM_CONFIG_BASE = https:/$()/play.boomstream.com/
+BOOMSTREAM_DEMO_MEDIA_CODE =
+
+#include? "Local.xcconfig"
