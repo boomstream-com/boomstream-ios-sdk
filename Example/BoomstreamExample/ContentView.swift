@@ -32,5 +32,8 @@ struct ContentView: View {
         .onChange(of: verticalSizeClass) { newValue in
             vm.handleOrientation(isLandscape: newValue == .compact)
         }
+        .onAppear {
+            vm.handleOrientation(isLandscape: verticalSizeClass == .compact)
+        }
     }
 }

@@ -1,5 +1,10 @@
 # Boomstream iOS SDK
 
+[![License](https://img.shields.io/badge/license-Apache%202.0-green)](LICENSE)
+[![Platform](https://img.shields.io/badge/iOS-15.0%2B-orange)](#)
+[![Swift](https://img.shields.io/badge/swift-6.0%2B-purple)](#)
+[![SPM](https://img.shields.io/badge/SPM-compatible-blue)](#)
+
 Нативный iOS SDK видеоплатформы [Boomstream](https://boomstream.com): воспроизведение HLS (VOD, live-трансляции, плейлисты, защищённый контент), клиент Boomstream API и офлайн-загрузки.
 
 - **Zero third-party dependencies** — только системные фреймворки (AVFoundation, URLSession)

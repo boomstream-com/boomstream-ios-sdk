@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1] — 2026-07-16
+
+### Fixed
+- Example app: контейнер fullscreen-плеера корректно масштабируется при повороте устройства в открытом fullscreen.
+
+### Changed
+- README: бейджи License / Platform / Swift / SPM.
+
 ## [0.1.0] — 2026-07-16
 
 Первый публичный релиз.

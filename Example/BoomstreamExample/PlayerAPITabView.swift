@@ -35,7 +35,7 @@ struct PlayerAPITabView: View {
                 proxy: proxy,
                 onFullScreenChanged: { vm.handleFullScreenChanged($0) }
             )
-            .aspectRatio(vm.isFullScreen ? screenAspectRatio() : 16 / 9, contentMode: .fit)
+            .aspectRatio(vm.isFullScreen ? vm.fullscreenAspectRatio : 16 / 9, contentMode: .fit)
             .frame(maxWidth: .infinity, maxHeight: vm.isFullScreen ? .infinity : nil)
             .background(Color.black)
             .ignoresSafeArea(edges: vm.isFullScreen ? .all : [])

@@ -56,7 +56,7 @@ struct MediaTabView: View {
             // В fullscreen контейнеру задаётся пропорция экрана (не nil — SwiftUI
             // трактует nil как ideal-size и схлопывает representable), видео внутри
             // AVPlayerLayer сам вписывает по aspect
-            .aspectRatio(vm.isFullScreen ? screenAspectRatio() : 16 / 9, contentMode: .fit)
+            .aspectRatio(vm.isFullScreen ? vm.fullscreenAspectRatio : 16 / 9, contentMode: .fit)
             .frame(maxWidth: .infinity, maxHeight: vm.isFullScreen ? .infinity : nil)
             .background(Color.black)
             .ignoresSafeArea(edges: vm.isFullScreen ? .all : [])

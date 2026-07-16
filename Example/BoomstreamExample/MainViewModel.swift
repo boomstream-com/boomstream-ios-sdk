@@ -27,6 +27,9 @@ final class MainViewModel: ObservableObject {
     @Published private(set) var downloadStates: [String: DownloadState] = [:]
     /// Fullscreen активного плеера — по нему прячется chrome (переключатель табов и т.д.).
     @Published private(set) var isFullScreen = false
+    /// Текущая ориентация (publishing — чтобы поворот в открытом fullscreen перерисовал
+    /// контейнер плеера с новой пропорцией).
+    @Published private(set) var isLandscape = false
 
     /// Кто включил fullscreen: поворот (auto) или кнопка (manual).
     /// Возврат в portrait выходит из fullscreen ТОЛЬКО при auto-входе.
@@ -93,6 +96,7 @@ final class MainViewModel: ObservableObject {
 
     /// Landscape → авто-fullscreen; portrait → выход, только если вход был авто.
     func handleOrientation(isLandscape: Bool) {
+        self.isLandscape = isLandscape
         if isLandscape {
             guard !isFullScreen else { return }
             fullScreenSource = .auto
@@ -100,6 +104,17 @@ final class MainViewModel: ObservableObject {
         } else if isFullScreen, fullScreenSource == .auto {
             activeController?.setFullScreen(false)
         }
+    }
+
+    /// Пропорция fullscreen-контейнера плеера. Считается от min/max размеров экрана
+    /// (ориентация-независимы) + published `isLandscape` — не зависит от того, успел ли
+    /// `UIScreen.main.bounds` обновиться к моменту рендера.
+    var fullscreenAspectRatio: CGFloat {
+        let bounds = UIScreen.main.bounds
+        let short = min(bounds.width, bounds.height)
+        let long = max(bounds.width, bounds.height)
+        guard short > 0 else { return 16 / 9 }
+        return isLandscape ? long / short : short / long
     }
 
     /// Параллельная загрузка трёх списков; видео управляют loading/error UI,
@@ -151,10 +166,3 @@ func timeString(seconds: Double) -> String {
     return String(format: "%d:%02d", total / 60, total % 60)
 }
 
-/// Пропорция экрана в текущей ориентации — для fullscreen-контейнера плеера.
-@MainActor
-func screenAspectRatio() -> CGFloat {
-    let bounds = UIScreen.main.bounds
-    guard bounds.height > 0 else { return 16 / 9 }
-    return bounds.width / bounds.height
-}
