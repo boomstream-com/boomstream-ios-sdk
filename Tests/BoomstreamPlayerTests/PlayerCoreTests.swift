@@ -155,6 +155,29 @@ private final class StubOfflineCache: BoomstreamOfflineCache {
     core.release()
 }
 
+// MARK: - B1 regression: AdvancedPlayerOptions.preferredPeakBitRate must survive when no explicit quality override is set
+
+@MainActor
+@Test func advancedOptionsPeakBitRatePreservedWithoutExplicitQualityOverride() async throws {
+    // Before fix: qualityOverride was initialized to .auto, causing applyQualityToItem(_, .auto)
+    // to set item.preferredPeakBitRate = 0 on every playItem(at:) — wiping the AdvancedPlayerOptions hint.
+    // After fix: qualityOverride = nil initially; applyQualityToItem is skipped when nil.
+    let hint: Double = 5_000_000
+    let stub = StubConfigClient(responses: [.success(try decodedConfig("""
+    {"mediaData": {"code": "q", "links": {"hls": "\(Data("https://example.invalid/vod.m3u8".utf8).base64EncodedString())"}}}
+    """))])
+    let core = BoomstreamPlayerCore()
+    core.load(mediaCode: "q", configClient: stub, advancedOptions: AdvancedPlayerOptions(preferredPeakBitRate: hint))
+
+    let reached = await waitFor(timeout: 3) { core.player.currentItem != nil }
+    #expect(reached, "AVPlayerItem was not created within timeout")
+    #expect(
+        core.player.currentItem?.preferredPeakBitRate == hint,
+        "AdvancedPlayerOptions.preferredPeakBitRate must not be zeroed before host calls setQuality/selectAuto"
+    )
+    core.release()
+}
+
 @Test func assetOptionsCarryUserAgentHeader() {
     let options = AssetFactory.assetOptions(userAgent: "UA test")
     let headers = options["AVURLAssetHTTPHeaderFieldsKey"] as? [String: String]

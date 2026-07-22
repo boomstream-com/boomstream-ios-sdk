@@ -21,9 +21,11 @@ public final class BoomstreamPlayerUIView: UIView {
     private var stateTask: Task<Void, Never>?
     private var eventsTask: Task<Void, Never>?
     private var progressTask: Task<Void, Never>?
+    private var qualityTask: Task<Void, Never>?
     private var autoHideTask: Task<Void, Never>?
     private var posterFetchTask: Task<Void, Never>?
     private var isPlaying = false
+    private var storedAdvancedOptions = AdvancedPlayerOptions()
 
     /// Программное управление. Сырой AVPlayer не экспонируется.
     public var controller: any BoomstreamPlayerController { core }
@@ -121,6 +123,13 @@ public final class BoomstreamPlayerUIView: UIView {
                 self?.controls.update(progress: snapshot)
             }
         }
+        qualityTask = Task { [weak self] in
+            guard let stream = self?.core.qualityUpdates else { return }
+            for await qualities in stream {
+                let visible = (self?.storedAdvancedOptions.showQualitySelector == true) && !qualities.isEmpty
+                self?.controls.update(qualityButtonVisible: visible)
+            }
+        }
     }
 
     private func wireControls() {
@@ -145,6 +154,9 @@ public final class BoomstreamPlayerUIView: UIView {
             self?.core.toggleFullScreen()
             self?.scheduleAutoHide()
         }
+        controls.onQualityTapped = { [weak self] sourceButton in
+            self?.presentQualitySheet(from: sourceButton)
+        }
     }
 
     public func load(
@@ -154,6 +166,8 @@ public final class BoomstreamPlayerUIView: UIView {
         advancedOptions: AdvancedPlayerOptions = AdvancedPlayerOptions(),
         offlineCache: (any BoomstreamOfflineCache)? = nil
     ) {
+        storedAdvancedOptions = advancedOptions
+        controls.update(qualityButtonVisible: false)
         core.load(
             mediaCode: mediaCode,
             configClient: configClient ?? Boomstream.configClient,
@@ -165,12 +179,13 @@ public final class BoomstreamPlayerUIView: UIView {
 
     /// Полная остановка воспроизведения и подписок. Обязателен при ручном UIKit-использовании.
     public func release() {
-        for task in [stateTask, eventsTask, progressTask, autoHideTask, posterFetchTask] {
+        for task in [stateTask, eventsTask, progressTask, qualityTask, autoHideTask, posterFetchTask] {
             task?.cancel()
         }
         stateTask = nil
         eventsTask = nil
         progressTask = nil
+        qualityTask = nil
         autoHideTask = nil
         posterFetchTask = nil
         core.release()
@@ -271,6 +286,44 @@ public final class BoomstreamPlayerUIView: UIView {
             guard !Task.isCancelled, let self, self.isPlaying, !self.controls.isScrubbing else { return }
             self.setControls(visible: false)
         }
+    }
+
+    // MARK: - Quality sheet
+
+    private func presentQualitySheet(from sourceButton: UIButton) {
+        guard let vc = parentViewController else { return }
+        let sheet = UIAlertController(title: "Video Quality", message: nil, preferredStyle: .actionSheet)
+
+        let autoAction = UIAlertAction(title: VideoQuality.auto.label, style: .default) { [weak self] _ in
+            self?.core.selectAuto()
+        }
+        if core.currentQuality == .auto { autoAction.setValue(true, forKey: "checked") }
+        sheet.addAction(autoAction)
+
+        for quality in core.availableQualities {
+            let action = UIAlertAction(title: quality.label, style: .default) { [weak self] _ in
+                self?.core.setQuality(quality)
+            }
+            if quality == core.currentQuality { action.setValue(true, forKey: "checked") }
+            sheet.addAction(action)
+        }
+
+        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        if let popover = sheet.popoverPresentationController {
+            popover.sourceView = controls
+            popover.sourceRect = controls.convert(sourceButton.bounds, from: sourceButton)
+        }
+        vc.present(sheet, animated: true)
+    }
+
+    private var parentViewController: UIViewController? {
+        var responder: UIResponder? = self
+        while let r = responder {
+            if let vc = r as? UIViewController { return vc }
+            responder = r.next
+        }
+        return nil
     }
 
     // MARK: - Poster / message

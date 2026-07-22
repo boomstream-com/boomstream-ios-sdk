@@ -1,5 +1,33 @@
 # Changelog
 
+Формат следует [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+Проект придерживается [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [0.2.0] — 2026-07-22
+
+### Added
+
+- **Выбор качества видео** (`BoomstreamPlayer`) — плеер отдаёт варианты качества, обнаруженные
+  в HLS master-манифесте, для программного переключения. Новое в `BoomstreamPlayerController`:
+  - `availableQualities: [VideoQuality]` — заполняется после готовности плеера, сортировка от
+    большего разрешения к меньшему, сбрасывается на каждой смене медиа.
+  - `currentQuality` / `preferredQuality: VideoQuality` — применённое и запрошенное качество
+    (`.auto` по умолчанию).
+  - `qualityUpdates: AsyncStream<[VideoQuality]>` — стрим обновлений списка вариантов.
+  - `setQuality(_ quality: VideoQuality)` — ограничивает воспроизведение выбранным вариантом;
+    переключение живое, без перезагрузки и потери позиции, сохраняется при смене трека плейлиста.
+  - `selectAuto()` — снимает ограничение и возвращает адаптивный выбор.
+- **`VideoQuality`** — публичный enum без AVFoundation-типов: `.auto` /
+  `.resolution(height:peakBitRate:label:)` с UI-готовым `label` («1080p», «Auto»); покрыт
+  reflection-тестом публичной поверхности.
+- **`AdvancedPlayerOptions.showQualitySelector`** — opt-in флаг (по умолчанию `false`):
+  кнопка выбора качества в встроенных контролах плеера (action sheet со списком вариантов + Auto).
+  При `false` доступен только программный API. Демо — в Example, вкладка «Player API».
+
+---
+
 ## [0.1.1] — 2026-07-16
 
 ### Fixed

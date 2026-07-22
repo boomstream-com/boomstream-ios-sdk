@@ -26,4 +26,21 @@ public protocol BoomstreamPlayerController: AnyObject {
     var states: AsyncStream<PlayerState> { get }
     var events: AsyncStream<PlayerEvent> { get }
     var progress: AsyncStream<PlaybackProgress> { get }
+
+    // MARK: - Video quality API (Wave 1)
+
+    /// Quality variants discovered from the HLS master manifest. Populated after `.readyToPlay`.
+    /// Only primitives are exposed — no AVFoundation types (CSO constraint #1).
+    var availableQualities: [VideoQuality] { get }
+    /// The quality cap currently applied to the player engine (`.auto` until changed).
+    var currentQuality: VideoQuality { get }
+    /// The quality last requested by the host via `setQuality` / `selectAuto`.
+    var preferredQuality: VideoQuality { get }
+    /// Stream of available-quality updates (fires when variants are discovered or change).
+    var qualityUpdates: AsyncStream<[VideoQuality]> { get }
+
+    /// Apply a quality cap. Pass `.resolution(height:)` to restrict; see `availableQualities`.
+    func setQuality(_ quality: VideoQuality)
+    /// Remove the quality cap and return to adaptive streaming.
+    func selectAuto()
 }

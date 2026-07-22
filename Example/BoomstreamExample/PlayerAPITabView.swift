@@ -3,7 +3,7 @@ import BoomstreamPlayer
 import SwiftUI
 
 /// Вкладка «Player API»: кастомные вызовы контроллера, прогресс, 70%-триггер,
-/// event log, fullscreen-пейн.
+/// event log, качество, fullscreen-пейн.
 struct PlayerAPITabView: View {
     @ObservedObject var vm: MainViewModel
     @StateObject private var proxy = BoomstreamPlayerProxy()
@@ -12,6 +12,8 @@ struct PlayerAPITabView: View {
     @State private var reached70 = false
     @State private var volume = 1.0
     @State private var lastLoggedProgressDecade = -1
+    @State private var availableQualities: [VideoQuality] = []
+    @State private var currentQuality: VideoQuality = .auto
 
     var body: some View {
         if let code = vm.selectedMediaCode {
@@ -47,6 +49,7 @@ struct PlayerAPITabView: View {
         }
         .task(id: code) { await observeProgress() }
         .task(id: code) { await observeEvents() }
+        .task(id: code) { await observeQualities() }
         .onChange(of: code) { _ in
             resetPerMediaState()
         }
@@ -64,6 +67,7 @@ struct PlayerAPITabView: View {
                         .background(RoundedRectangle(cornerRadius: 8).fill(Color.accentColor.opacity(0.15)))
                 }
                 controlsSection
+                qualitySection
                 eventLogSection
             }
             .padding()
@@ -111,6 +115,44 @@ struct PlayerAPITabView: View {
             }
         }
         .buttonStyle(.bordered)
+    }
+
+    private var qualitySection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Качество видео").font(.headline)
+            Text("Текущее: \(currentQuality.label)")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+            if availableQualities.isEmpty {
+                Text("— качество загружается (ожидайте readyToPlay) —")
+                    .font(.caption.monospaced())
+                    .foregroundColor(.secondary)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        qualityPill(label: "Auto", selected: currentQuality == .auto) {
+                            proxy.controller?.selectAuto()
+                            currentQuality = .auto
+                        }
+                        ForEach(availableQualities, id: \.self) { quality in
+                            qualityPill(label: quality.label, selected: quality == currentQuality) {
+                                proxy.controller?.setQuality(quality)
+                                currentQuality = quality
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func qualityPill(label: String, selected: Bool, action: @escaping () -> Void) -> some View {
+        if selected {
+            Button(label, action: action).buttonStyle(.borderedProminent)
+        } else {
+            Button(label, action: action).buttonStyle(.bordered)
+        }
     }
 
     private var eventLogSection: some View {
@@ -168,6 +210,14 @@ struct PlayerAPITabView: View {
         }
     }
 
+    private func observeQualities() async {
+        guard let controller = await waitForController() else { return }
+        for await qualities in controller.qualityUpdates {
+            availableQualities = qualities
+            currentQuality = controller.currentQuality
+        }
+    }
+
     private func waitForController() async -> (any BoomstreamPlayerController)? {
         for _ in 0..<100 where proxy.controller == nil {
             try? await Task.sleep(nanoseconds: 50_000_000)
@@ -185,5 +235,7 @@ struct PlayerAPITabView: View {
         eventLog = []
         reached70 = false
         lastLoggedProgressDecade = -1
+        availableQualities = []
+        currentQuality = .auto
     }
 }

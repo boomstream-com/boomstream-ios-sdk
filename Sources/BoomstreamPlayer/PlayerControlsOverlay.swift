@@ -10,6 +10,8 @@ final class PlayerControlsOverlay: UIView {
     var onPrevious: (() -> Void)?
     var onNext: (() -> Void)?
     var onFullScreen: (() -> Void)?
+    /// Called when the user taps the gear button; receives the button itself for iPad popover anchoring.
+    var onQualityTapped: ((UIButton) -> Void)?
     /// percent 0…1
     var onSeek: ((Double) -> Void)?
 
@@ -20,6 +22,8 @@ final class PlayerControlsOverlay: UIView {
     private let previousButton = UIButton(type: .system)
     private let nextButton = UIButton(type: .system)
     private let fullScreenButton = UIButton(type: .system)
+    // Internal: exposed for UIAlertController popover source on iPad.
+    let qualityButton = UIButton(type: .system)
     private let slider = UISlider()
     private let positionLabel = UILabel()
     private let durationLabel = UILabel()
@@ -48,6 +52,14 @@ final class PlayerControlsOverlay: UIView {
         configure(previousButton, symbol: "backward.end.fill", config: midConfig) { [weak self] in self?.onPrevious?() }
         configure(nextButton, symbol: "forward.end.fill", config: midConfig) { [weak self] in self?.onNext?() }
         configure(fullScreenButton, symbol: "arrow.up.left.and.arrow.down.right", config: UIImage.SymbolConfiguration(pointSize: 17, weight: .semibold)) { [weak self] in self?.onFullScreen?() }
+        let gearConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .semibold)
+        qualityButton.setImage(UIImage(systemName: "gearshape", withConfiguration: gearConfig), for: .normal)
+        qualityButton.tintColor = .white
+        qualityButton.addAction(UIAction { [weak self] _ in
+            guard let self else { return }
+            self.onQualityTapped?(self.qualityButton)
+        }, for: .touchUpInside)
+        qualityButton.isHidden = true
         previousButton.isHidden = true
         nextButton.isHidden = true
 
@@ -83,7 +95,7 @@ final class PlayerControlsOverlay: UIView {
         bottomSpacer.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         let bottomStack = UIStackView(
-            arrangedSubviews: [liveIndicator, positionLabel, slider, durationLabel, bottomSpacer, fullScreenButton]
+            arrangedSubviews: [liveIndicator, positionLabel, slider, durationLabel, bottomSpacer, qualityButton, fullScreenButton]
         )
         bottomStack.axis = .horizontal
         bottomStack.spacing = 8
@@ -178,6 +190,12 @@ final class PlayerControlsOverlay: UIView {
         nextButton.isHidden = !showsTrackButtons
         previousButton.isEnabled = index > 0
         nextButton.isEnabled = index < size - 1
+    }
+
+    /// Shows or hides the quality gear button. Hidden by default until qualities are discovered
+    /// and `showQualitySelector` is enabled in `AdvancedPlayerOptions`.
+    func update(qualityButtonVisible: Bool) {
+        qualityButton.isHidden = !qualityButtonVisible
     }
 
     static func timeString(_ seconds: TimeInterval) -> String {
