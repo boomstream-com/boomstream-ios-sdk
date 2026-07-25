@@ -5,6 +5,22 @@
 
 ---
 
+## [0.3.0] — 2026-07-25
+
+### Changed
+
+- **Меню настроек** (`BoomstreamPlayer`) — кнопка шестерёнки в контролах плеера теперь открывает единую шторку «Настройки» с разделами «Скорость», «Качество» и «Аудио» вместо action sheet'а «только качество». Включается флагом `AdvancedPlayerOptions(showSettingsMenu: true)`. Старый `showQualitySelector` продолжает работать при `showSettingsMenu: false`.
+
+### Added
+
+- **`BoomstreamPlayerStyle`** — перекраска встроенных контролов, лоадера и оверлея ошибки. Поля: `loaderColor`, `accentColor`, `seekBarPlayedColor`, `seekBarScrubberColor`, `seekBarBufferedColor`, `messageTextColor`, `messageBackgroundColor` (все `nil` по умолчанию — не заданные поля сохраняют системное оформление). Передаётся через `BoomstreamPlayerView(style:)` (SwiftUI) или `BoomstreamPlayerUIView.style` (UIKit); изменяется вживую без перезагрузки медиа.
+- **Скорость воспроизведения** — `BoomstreamPlayerController.availableSpeeds: [PlayerSpeed]`, `currentSpeed`, `setSpeed(_:)`. Публичный тип `PlayerSpeed` (`.half`, `.threeQuarters`, `.normal`, `.oneQuarter`, `.oneHalf`, `.double`). Отображается в разделе «Скорость» меню настроек.
+- **Аудио-треки** — `BoomstreamPlayerController.availableAudioTracks: [AudioTrack]`, `currentAudioTrack: AudioTrack?`, `audioTrackUpdates: AsyncStream<[AudioTrack]>`, `selectAudioTrack(_:)`. Публичный тип `AudioTrack` (`id: String`, `displayName: String`). Раздел «Аудио» в меню появляется при наличии нескольких треков.
+- **`AdvancedPlayerOptions.locale`** — ISO 639-1 код языка строк в меню настроек (по умолчанию `"en"`). Поддерживаемые: `"en"`, `"ru"`. Не привязан к системной локали — задаётся интегратором явно. Обновляется в SwiftUI-плеере динамически без перезагрузки медиа.
+- **Example app**: переключатель языка меню настроек (`locale`) и включённый `showSettingsMenu: true` в вкладке «Player API».
+
+---
+
 ## [0.2.0] — 2026-07-22
 
 ### Added

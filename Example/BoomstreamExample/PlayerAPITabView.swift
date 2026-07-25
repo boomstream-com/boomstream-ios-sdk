@@ -14,6 +14,8 @@ struct PlayerAPITabView: View {
     @State private var lastLoggedProgressDecade = -1
     @State private var availableQualities: [VideoQuality] = []
     @State private var currentQuality: VideoQuality = .auto
+    @State private var stylePreset: StylePreset = .defaultStyle
+    @State private var selectedLocale: String = "en"
 
     var body: some View {
         if let code = vm.selectedMediaCode {
@@ -35,6 +37,8 @@ struct PlayerAPITabView: View {
             BoomstreamPlayerView(
                 mediaCode: code,
                 proxy: proxy,
+                advancedOptions: AdvancedPlayerOptions(showSettingsMenu: true, locale: selectedLocale),
+                style: stylePreset.playerStyle,
                 onFullScreenChanged: { vm.handleFullScreenChanged($0) }
             )
             .aspectRatio(vm.isFullScreen ? vm.fullscreenAspectRatio : 16 / 9, contentMode: .fit)
@@ -67,6 +71,8 @@ struct PlayerAPITabView: View {
                         .background(RoundedRectangle(cornerRadius: 8).fill(Color.accentColor.opacity(0.15)))
                 }
                 controlsSection
+                styleSection
+                localeSection
                 qualitySection
                 eventLogSection
             }
@@ -115,6 +121,57 @@ struct PlayerAPITabView: View {
             }
         }
         .buttonStyle(.bordered)
+    }
+
+    // MARK: - Style demo
+
+    private var styleSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("BoomstreamPlayerStyle").font(.headline)
+            Text("Смените цветовую тему — изменение применяется вживую.")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            HStack(spacing: 8) {
+                ForEach(StylePreset.allCases) { preset in
+                    stylePill(preset: preset)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func stylePill(preset: StylePreset) -> some View {
+        let button = Button {
+            stylePreset = preset
+        } label: {
+            HStack(spacing: 4) {
+                Circle()
+                    .fill(preset.swatchColor)
+                    .frame(width: 10, height: 10)
+                Text(preset.label)
+            }
+        }
+        if stylePreset == preset {
+            button.buttonStyle(.borderedProminent)
+        } else {
+            button.buttonStyle(.bordered)
+        }
+    }
+
+    // MARK: - Locale demo
+
+    private var localeSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Язык меню (locale)").font(.headline)
+            Text("Нажмите шестерёнку ⚙ в плеере, чтобы увидеть меню на выбранном языке.")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            Picker("Locale", selection: $selectedLocale) {
+                Text("English (en)").tag("en")
+                Text("Русский (ru)").tag("ru")
+            }
+            .pickerStyle(.segmented)
+        }
     }
 
     private var qualitySection: some View {
@@ -237,5 +294,52 @@ struct PlayerAPITabView: View {
         lastLoggedProgressDecade = -1
         availableQualities = []
         currentQuality = .auto
+    }
+}
+
+// MARK: - Style presets
+
+enum StylePreset: String, CaseIterable, Identifiable {
+    case defaultStyle = "default"
+    case boomstreamViolet = "violet"
+    case midnightGold = "gold"
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .defaultStyle: return "Default"
+        case .boomstreamViolet: return "Violet"
+        case .midnightGold: return "Gold"
+        }
+    }
+
+    var swatchColor: Color {
+        switch self {
+        case .defaultStyle: return .white
+        case .boomstreamViolet: return Color(red: 0.4, green: 0.169, blue: 1.0)
+        case .midnightGold: return Color(red: 1.0, green: 0.8, blue: 0.0)
+        }
+    }
+
+    var playerStyle: BoomstreamPlayerStyle {
+        switch self {
+        case .defaultStyle:
+            return BoomstreamPlayerStyle()
+        case .boomstreamViolet:
+            // Boomstream brand violet #662BFF
+            let violet = UIColor(red: 0.4, green: 0.169, blue: 1.0, alpha: 1.0)
+            return BoomstreamPlayerStyle(
+                loaderColor: violet,
+                accentColor: violet
+            )
+        case .midnightGold:
+            let gold = UIColor(red: 1.0, green: 0.8, blue: 0.0, alpha: 1.0)
+            return BoomstreamPlayerStyle(
+                loaderColor: gold,
+                accentColor: gold,
+                messageBackgroundColor: UIColor.black.withAlphaComponent(0.6)
+            )
+        }
     }
 }

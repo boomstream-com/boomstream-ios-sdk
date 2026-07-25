@@ -16,6 +16,8 @@ public final class BoomstreamPlayerUIView: UIView {
     private let core = BoomstreamPlayerCore()
     private let posterView = UIImageView()
     private let messageLabel = UILabel()
+    private let messageLabelContainer = UIView()
+    private let loaderSpinner = UIActivityIndicatorView(style: .large)
     private let controls = PlayerControlsOverlay()
     private let liveBadge = LiveStatusBadge()
     private var stateTask: Task<Void, Never>?
@@ -26,6 +28,12 @@ public final class BoomstreamPlayerUIView: UIView {
     private var posterFetchTask: Task<Void, Never>?
     private var isPlaying = false
     private var storedAdvancedOptions = AdvancedPlayerOptions()
+
+    /// Colour overrides for controls, loader, and message overlay.
+    /// All fields are optional — `nil` keeps default appearance (backward-compatible).
+    public var style: BoomstreamPlayerStyle = BoomstreamPlayerStyle() {
+        didSet { applyStyle() }
+    }
 
     /// Программное управление. Сырой AVPlayer не экспонируется.
     public var controller: any BoomstreamPlayerController { core }
@@ -64,13 +72,20 @@ public final class BoomstreamPlayerUIView: UIView {
         posterView.isHidden = true
         addSubview(posterView)
 
+        loaderSpinner.color = .white
+        loaderSpinner.hidesWhenStopped = true
+        loaderSpinner.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(loaderSpinner)
+
         messageLabel.textColor = .white
         messageLabel.textAlignment = .center
         messageLabel.numberOfLines = 0
         messageLabel.font = .preferredFont(forTextStyle: .callout)
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
-        messageLabel.isHidden = true
-        addSubview(messageLabel)
+        messageLabelContainer.translatesAutoresizingMaskIntoConstraints = false
+        messageLabelContainer.isHidden = true
+        messageLabelContainer.addSubview(messageLabel)
+        addSubview(messageLabelContainer)
 
         controls.translatesAutoresizingMaskIntoConstraints = false
         controls.alpha = 0
@@ -86,10 +101,20 @@ public final class BoomstreamPlayerUIView: UIView {
             posterView.bottomAnchor.constraint(equalTo: bottomAnchor),
             posterView.leadingAnchor.constraint(equalTo: leadingAnchor),
             posterView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            messageLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            messageLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            messageLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 16),
-            messageLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16),
+
+            loaderSpinner.centerXAnchor.constraint(equalTo: centerXAnchor),
+            loaderSpinner.centerYAnchor.constraint(equalTo: centerYAnchor),
+
+            messageLabelContainer.centerXAnchor.constraint(equalTo: centerXAnchor),
+            messageLabelContainer.centerYAnchor.constraint(equalTo: centerYAnchor),
+            messageLabelContainer.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 16),
+            messageLabelContainer.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16),
+
+            messageLabel.topAnchor.constraint(equalTo: messageLabelContainer.topAnchor, constant: 8),
+            messageLabel.bottomAnchor.constraint(equalTo: messageLabelContainer.bottomAnchor, constant: -8),
+            messageLabel.leadingAnchor.constraint(equalTo: messageLabelContainer.leadingAnchor, constant: 12),
+            messageLabel.trailingAnchor.constraint(equalTo: messageLabelContainer.trailingAnchor, constant: -12),
+
             controls.topAnchor.constraint(equalTo: topAnchor),
             controls.bottomAnchor.constraint(equalTo: bottomAnchor),
             controls.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -126,8 +151,10 @@ public final class BoomstreamPlayerUIView: UIView {
         qualityTask = Task { [weak self] in
             guard let stream = self?.core.qualityUpdates else { return }
             for await qualities in stream {
+                // Legacy mode only: settings-menu mode controls gear visibility via state transitions.
+                guard self?.storedAdvancedOptions.showSettingsMenu == false else { continue }
                 let visible = (self?.storedAdvancedOptions.showQualitySelector == true) && !qualities.isEmpty
-                self?.controls.update(qualityButtonVisible: visible)
+                self?.controls.update(gearButtonVisible: visible)
             }
         }
     }
@@ -154,9 +181,30 @@ public final class BoomstreamPlayerUIView: UIView {
             self?.core.toggleFullScreen()
             self?.scheduleAutoHide()
         }
-        controls.onQualityTapped = { [weak self] sourceButton in
-            self?.presentQualitySheet(from: sourceButton)
+        controls.onGearTapped = { [weak self] sourceButton in
+            guard let self else { return }
+            if self.storedAdvancedOptions.showSettingsMenu {
+                self.presentSettingsSheet(from: sourceButton)
+            } else {
+                self.presentQualitySheet(from: sourceButton)
+            }
         }
+    }
+
+    // MARK: - Style application
+
+    private func applyStyle() {
+        loaderSpinner.color = style.loaderColor ?? .white
+        messageLabel.textColor = style.messageTextColor ?? .white
+        messageLabelContainer.backgroundColor = style.messageBackgroundColor
+        messageLabelContainer.layer.cornerRadius = style.messageBackgroundColor != nil ? 8 : 0
+        controls.applyStyle(style)
+    }
+
+    /// Update the locale used for settings menu strings without reloading media.
+    /// Called from `BoomstreamPlayerView.updateUIView` when `advancedOptions.locale` changes.
+    func updateLocale(_ locale: String) {
+        storedAdvancedOptions.locale = locale
     }
 
     public func load(
@@ -167,7 +215,7 @@ public final class BoomstreamPlayerUIView: UIView {
         offlineCache: (any BoomstreamOfflineCache)? = nil
     ) {
         storedAdvancedOptions = advancedOptions
-        controls.update(qualityButtonVisible: false)
+        controls.update(gearButtonVisible: false)
         core.load(
             mediaCode: mediaCode,
             configClient: configClient ?? Boomstream.configClient,
@@ -195,18 +243,26 @@ public final class BoomstreamPlayerUIView: UIView {
 
     private func apply(state: PlayerState) {
         switch state {
+        case .loading:
+            loaderSpinner.startAnimating()
+            showMessage(nil)
+            setControls(visible: false, animated: false)
+            liveBadge.isHidden = true
         case .posterOnly(let posterURL, let message, let isLiveOffline):
+            loaderSpinner.stopAnimating()
             showPoster(url: posterURL)
             showMessage(message)
             setControls(visible: false, animated: false)
             liveBadge.isHidden = !isLiveOffline
             if isLiveOffline { liveBadge.set(online: false) }
         case .error(let message):
+            loaderSpinner.stopAnimating()
             posterView.isHidden = true
             showMessage(message)
             setControls(visible: false, animated: false)
             liveBadge.isHidden = true
         case .ready(_, let isPlaylist, let index, let size, let isLive, _):
+            loaderSpinner.stopAnimating()
             posterView.isHidden = true
             showMessage(nil)
             controls.update(isPlaylist: isPlaylist, index: index, size: size)
@@ -215,11 +271,16 @@ public final class BoomstreamPlayerUIView: UIView {
             // corner-бейдж — только для офлайн-эфира на постере (контролы там скрыты);
             // в ready статус живёт в нижней панели контролов
             liveBadge.isHidden = true
+            // Settings-menu mode: gear is always shown once the player is ready (Speed is always available).
+            if storedAdvancedOptions.showSettingsMenu {
+                controls.update(gearButtonVisible: true)
+            }
             if isControlsEnabled {
                 setControls(visible: true)
                 scheduleAutoHide()
             }
-        case .idle, .loading, .ended:
+        case .idle, .ended:
+            loaderSpinner.stopAnimating()
             showMessage(nil)
             if case .ended = state {} else { liveBadge.isHidden = true }
             if case .ended = state {
@@ -288,7 +349,95 @@ public final class BoomstreamPlayerUIView: UIView {
         }
     }
 
-    // MARK: - Quality sheet
+    // MARK: - Settings sheet (unified: Speed + Quality + Audio)
+
+    private func presentSettingsSheet(from sourceButton: UIButton) {
+        guard let vc = parentViewController else { return }
+        let locale = storedAdvancedOptions.locale
+
+        var sections: [SettingsSheetController.Section] = []
+
+        // Speed section — always present
+        let speedRows = core.availableSpeeds.map { speed in
+            let label = speed == .normal
+                ? BoomstreamMessages.resolve("settings_speed_normal", locale: locale)
+                : speed.label
+            return SettingsSheetController.Row(title: label, isSelected: speed == core.currentSpeed) { [weak self] in
+                self?.core.setSpeed(speed)
+            }
+        }
+        sections.append(SettingsSheetController.Section(
+            title: BoomstreamMessages.resolve("settings_speed", locale: locale),
+            items: speedRows
+        ))
+
+        // Quality section — only when variants have been discovered
+        if !core.availableQualities.isEmpty {
+            var qualityRows: [SettingsSheetController.Row] = [
+                SettingsSheetController.Row(
+                    title: BoomstreamMessages.resolve("settings_quality_auto", locale: locale),
+                    isSelected: core.currentQuality == .auto
+                ) { [weak self] in self?.core.selectAuto() }
+            ]
+            qualityRows += core.availableQualities.map { q in
+                SettingsSheetController.Row(title: q.label, isSelected: q == core.currentQuality) { [weak self] in
+                    self?.core.setQuality(q)
+                }
+            }
+            sections.append(SettingsSheetController.Section(
+                title: BoomstreamMessages.resolve("settings_quality", locale: locale),
+                items: qualityRows
+            ))
+        }
+
+        // Audio section — only when multiple tracks are available
+        if core.availableAudioTracks.count > 1 {
+            let audioRows = core.availableAudioTracks.map { track in
+                SettingsSheetController.Row(
+                    title: track.displayName,
+                    isSelected: track == core.currentAudioTrack
+                ) { [weak self] in self?.core.selectAudioTrack(track) }
+            }
+            sections.append(SettingsSheetController.Section(
+                title: BoomstreamMessages.resolve("settings_audio", locale: locale),
+                items: audioRows
+            ))
+        }
+
+        // Subtitles section — only when real subtitle tracks are present (phantom CC filtered in Core)
+        if !core.availableSubtitleTracks.isEmpty {
+            var subtitleRows: [SettingsSheetController.Row] = [
+                SettingsSheetController.Row(
+                    title: BoomstreamMessages.resolve("subtitles_off", locale: locale),
+                    isSelected: core.currentSubtitleTrack == nil
+                ) { [weak self] in self?.core.selectNoSubtitles() }
+            ]
+            subtitleRows += core.availableSubtitleTracks.map { track in
+                SettingsSheetController.Row(
+                    title: track.displayName,
+                    isSelected: track == core.currentSubtitleTrack
+                ) { [weak self] in self?.core.selectSubtitleTrack(track) }
+            }
+            sections.append(SettingsSheetController.Section(
+                title: BoomstreamMessages.resolve("subtitles_title", locale: locale),
+                items: subtitleRows
+            ))
+        }
+
+        let sheet = SettingsSheetController(
+            title: BoomstreamMessages.resolve("settings_title", locale: locale),
+            sections: sections
+        )
+        let nav = UINavigationController(rootViewController: sheet)
+        if let sheetPC = nav.sheetPresentationController {
+            sheetPC.detents = [.medium(), .large()]
+            sheetPC.prefersGrabberVisible = true
+            sheetPC.preferredCornerRadius = 16
+        }
+        vc.present(nav, animated: true)
+    }
+
+    // MARK: - Quality sheet (legacy: showQualitySelector)
 
     private func presentQualitySheet(from sourceButton: UIButton) {
         guard let vc = parentViewController else { return }
@@ -330,7 +479,7 @@ public final class BoomstreamPlayerUIView: UIView {
 
     private func showMessage(_ text: String?) {
         messageLabel.text = text
-        messageLabel.isHidden = (text == nil)
+        messageLabelContainer.isHidden = (text == nil)
     }
 
     private func showPoster(url: URL?) {

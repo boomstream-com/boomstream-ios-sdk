@@ -11,7 +11,7 @@ final class PlayerControlsOverlay: UIView {
     var onNext: (() -> Void)?
     var onFullScreen: (() -> Void)?
     /// Called when the user taps the gear button; receives the button itself for iPad popover anchoring.
-    var onQualityTapped: ((UIButton) -> Void)?
+    var onGearTapped: ((UIButton) -> Void)?
     /// percent 0…1
     var onSeek: ((Double) -> Void)?
 
@@ -30,6 +30,7 @@ final class PlayerControlsOverlay: UIView {
     private let liveIndicator = LiveStatusBadge()
     private let bottomSpacer = UIView()
     private var lastKnownDuration: TimeInterval = 0
+    private var controlButtons: [UIButton] { [playPauseButton, previousButton, nextButton, fullScreenButton, qualityButton] }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -57,7 +58,7 @@ final class PlayerControlsOverlay: UIView {
         qualityButton.tintColor = .white
         qualityButton.addAction(UIAction { [weak self] _ in
             guard let self else { return }
-            self.onQualityTapped?(self.qualityButton)
+            self.onGearTapped?(self.qualityButton)
         }, for: .touchUpInside)
         qualityButton.isHidden = true
         previousButton.isHidden = true
@@ -127,12 +128,26 @@ final class PlayerControlsOverlay: UIView {
         button.addAction(UIAction { _ in action() }, for: .touchUpInside)
     }
 
-    private func thumbImage(radius: CGFloat) -> UIImage {
+    private func thumbImage(radius: CGFloat, color: UIColor = .white) -> UIImage {
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: radius * 2, height: radius * 2))
         return renderer.image { context in
-            UIColor.white.setFill()
+            color.setFill()
             context.cgContext.fillEllipse(in: CGRect(x: 0, y: 0, width: radius * 2, height: radius * 2))
         }
+    }
+
+    // MARK: - Style application
+
+    func applyStyle(_ style: BoomstreamPlayerStyle) {
+        let accent = style.accentColor ?? .white
+        for button in controlButtons {
+            button.tintColor = accent
+        }
+        let playedColor = style.seekBarPlayedColor ?? accent
+        slider.minimumTrackTintColor = playedColor
+        slider.maximumTrackTintColor = style.seekBarBufferedColor ?? UIColor.white.withAlphaComponent(0.3)
+        let scrubberColor = style.seekBarScrubberColor ?? accent
+        slider.setThumbImage(thumbImage(radius: 6, color: scrubberColor), for: .normal)
     }
 
     private func scrubChanged() {
@@ -192,10 +207,9 @@ final class PlayerControlsOverlay: UIView {
         nextButton.isEnabled = index < size - 1
     }
 
-    /// Shows or hides the quality gear button. Hidden by default until qualities are discovered
-    /// and `showQualitySelector` is enabled in `AdvancedPlayerOptions`.
-    func update(qualityButtonVisible: Bool) {
-        qualityButton.isHidden = !qualityButtonVisible
+    /// Shows or hides the gear button.
+    func update(gearButtonVisible: Bool) {
+        qualityButton.isHidden = !gearButtonVisible
     }
 
     static func timeString(_ seconds: TimeInterval) -> String {

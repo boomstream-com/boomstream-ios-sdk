@@ -28,6 +28,7 @@ public struct BoomstreamPlayerView: UIViewRepresentable {
     private let advancedOptions: AdvancedPlayerOptions
     private let offlineCache: (any BoomstreamOfflineCache)?
     private let showsControls: Bool
+    private let style: BoomstreamPlayerStyle
     private let onState: (PlayerState) -> Void
     private let onFullScreenChanged: ((Bool) -> Void)?
 
@@ -39,6 +40,7 @@ public struct BoomstreamPlayerView: UIViewRepresentable {
         advancedOptions: AdvancedPlayerOptions = AdvancedPlayerOptions(),
         offlineCache: (any BoomstreamOfflineCache)? = nil,
         showsControls: Bool = true,
+        style: BoomstreamPlayerStyle = BoomstreamPlayerStyle(),
         onState: @escaping (PlayerState) -> Void = { _ in },
         onFullScreenChanged: ((Bool) -> Void)? = nil
     ) {
@@ -49,6 +51,7 @@ public struct BoomstreamPlayerView: UIViewRepresentable {
         self.advancedOptions = advancedOptions
         self.offlineCache = offlineCache
         self.showsControls = showsControls
+        self.style = style
         self.onState = onState
         self.onFullScreenChanged = onFullScreenChanged
     }
@@ -58,6 +61,7 @@ public struct BoomstreamPlayerView: UIViewRepresentable {
         view.onState = onState
         view.onFullScreenChanged = onFullScreenChanged
         view.isControlsEnabled = showsControls
+        view.style = style
         proxy?.controller = view.controller
         load(into: view)
         context.coordinator.loadedMediaCode = mediaCode
@@ -65,6 +69,8 @@ public struct BoomstreamPlayerView: UIViewRepresentable {
     }
 
     public func updateUIView(_ uiView: BoomstreamPlayerUIView, context: Context) {
+        uiView.style = style
+        uiView.updateLocale(advancedOptions.locale)
         guard context.coordinator.loadedMediaCode != mediaCode else { return }
         context.coordinator.loadedMediaCode = mediaCode
         load(into: uiView)

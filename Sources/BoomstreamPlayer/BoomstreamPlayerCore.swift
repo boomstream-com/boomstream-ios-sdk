@@ -42,6 +42,8 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
     private var loadTask: Task<Void, Never>?
     private var pollTask: Task<Void, Never>?
     private var variantDiscoveryTask: Task<Void, Never>?
+    private var audioDiscoveryTask: Task<Void, Never>?
+    private var subtitleDiscoveryTask: Task<Void, Never>?
     private var statusObservation: NSKeyValueObservation?
     private var timeControlObservation: NSKeyValueObservation?
     // nonisolated(unsafe): мутация только на MainActor; чтение из deinit безопасно
@@ -64,6 +66,34 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
     /// Explicit quality override set by host via setQuality/selectAuto.
     /// nil = no override; AdvancedPlayerOptions.preferredPeakBitRate initial hint is preserved.
     private var qualityOverride: VideoQuality? = nil
+
+    // MARK: - Speed state
+
+    public private(set) var currentSpeed: PlayerSpeed = .normal
+    public var availableSpeeds: [PlayerSpeed] { PlayerSpeed.allCases }
+
+    // MARK: - Audio track state
+
+    public private(set) var availableAudioTracks: [AudioTrack] = []
+    public private(set) var currentAudioTrack: AudioTrack? = nil
+
+    private let audioTrackBroadcast = Broadcast<[AudioTrack]>()
+    public var audioTrackUpdates: AsyncStream<[AudioTrack]> { audioTrackBroadcast.stream() }
+
+    // Internal AVFoundation references — never exposed publicly (CSO constraint #1).
+    private var audioGroup: AVMediaSelectionGroup? = nil
+    private var audioOptionMap: [String: AVMediaSelectionOption] = [:]
+
+    // MARK: - Subtitle track state
+
+    public private(set) var availableSubtitleTracks: [SubtitleTrack] = []
+    public private(set) var currentSubtitleTrack: SubtitleTrack? = nil
+
+    private let subtitleTrackBroadcast = Broadcast<[SubtitleTrack]>()
+    public var subtitleTrackUpdates: AsyncStream<[SubtitleTrack]> { subtitleTrackBroadcast.stream() }
+
+    private var subtitleGroup: AVMediaSelectionGroup? = nil
+    private var subtitleOptionMap: [String: AVMediaSelectionOption] = [:]
 
     public init(livePollInterval: TimeInterval = 15) {
         self.livePollInterval = livePollInterval
@@ -89,6 +119,8 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         loadTask?.cancel()
         pollTask?.cancel()
         variantDiscoveryTask?.cancel()
+        audioDiscoveryTask?.cancel()
+        subtitleDiscoveryTask?.cancel()
     }
 
     // MARK: - Loading
@@ -138,6 +170,10 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         pollTask = nil
         variantDiscoveryTask?.cancel()
         variantDiscoveryTask = nil
+        audioDiscoveryTask?.cancel()
+        audioDiscoveryTask = nil
+        subtitleDiscoveryTask?.cancel()
+        subtitleDiscoveryTask = nil
         detachCurrentItemObservers()
         player.replaceCurrentItem(with: nil)
         items = []
@@ -148,7 +184,15 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         systemMessage = nil
         availableQualities = []
         currentQuality = .auto
-        // preferredQuality and qualityOverride intentionally preserved across load() calls
+        availableAudioTracks = []
+        currentAudioTrack = nil
+        audioGroup = nil
+        audioOptionMap = [:]
+        availableSubtitleTracks = []
+        currentSubtitleTrack = nil
+        subtitleGroup = nil
+        subtitleOptionMap = [:]
+        // preferredQuality, qualityOverride, and currentSpeed intentionally preserved across load() calls
     }
 
     private func resolveAndStart(mediaCode: String, forceRefresh: Bool, allowPolling: Bool) async {
@@ -256,6 +300,8 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
             )
             eventBroadcast.yield(.loaded)
             discoverVariants()
+            discoverAudioTracks()
+            discoverSubtitleTracks()
         case .failed:
             state = .error(message: errorText ?? "Playback failed")
         default:
@@ -292,6 +338,123 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         guard !qualities.isEmpty, !Task.isCancelled else { return }
         availableQualities = qualities
         qualityBroadcast.yield(qualities)
+    }
+
+    // MARK: - Audio track discovery
+
+    private func discoverAudioTracks() {
+        availableAudioTracks = []
+        currentAudioTrack = nil
+        audioGroup = nil
+        audioOptionMap = [:]
+        guard let item = player.currentItem else { return }
+        audioDiscoveryTask?.cancel()
+        audioDiscoveryTask = Task { [weak self] in
+            await self?.loadAudioTracks(from: item)
+        }
+    }
+
+    private func loadAudioTracks(from item: AVPlayerItem) async {
+        // At readyToPlay, HLS assets have their media selection groups in memory —
+        // the synchronous accessor does not trigger a network fetch at this point.
+        guard !Task.isCancelled,
+              let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .audible),
+              group.options.count > 1
+        else { return }
+
+        var map: [String: AVMediaSelectionOption] = [:]
+        var tracks: [AudioTrack] = []
+        for (i, option) in group.options.enumerated() {
+            let id = String(i)
+            map[id] = option
+            tracks.append(AudioTrack(id: id, displayName: option.displayName(with: Locale.current)))
+        }
+        guard !Task.isCancelled else { return }
+        audioGroup = group
+        audioOptionMap = map
+        availableAudioTracks = tracks
+        let selected = item.currentMediaSelection.selectedMediaOption(in: group)
+        if let selected,
+           let entry = map.first(where: { $0.value == selected }) {
+            currentAudioTrack = tracks.first(where: { $0.id == entry.key })
+        }
+        if currentAudioTrack == nil { currentAudioTrack = tracks.first }
+        audioTrackBroadcast.yield(tracks)
+    }
+
+    // MARK: - Subtitle track discovery
+
+    private func discoverSubtitleTracks() {
+        availableSubtitleTracks = []
+        currentSubtitleTrack = nil
+        subtitleGroup = nil
+        subtitleOptionMap = [:]
+        guard let item = player.currentItem else { return }
+        subtitleDiscoveryTask?.cancel()
+        subtitleDiscoveryTask = Task { [weak self] in
+            await self?.loadSubtitleTracks(from: item)
+        }
+    }
+
+    private func loadSubtitleTracks(from item: AVPlayerItem) async {
+        guard !Task.isCancelled,
+              let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .legible)
+        else { return }
+
+        var map: [String: AVMediaSelectionOption] = [:]
+        var tracks: [SubtitleTrack] = []
+        for (i, option) in group.options.enumerated() {
+            guard BoomstreamPlayerCore.subtitleOptionPasses(
+                mediaType: option.mediaType,
+                isForced: option.hasMediaCharacteristic(.containsOnlyForcedSubtitles),
+                isAccessibility: option.hasMediaCharacteristic(.transcribesSpokenDialogForAccessibility)
+            ) else { continue }
+            let id = String(i)
+            map[id] = option
+            tracks.append(SubtitleTrack(id: id, displayName: option.displayName(with: Locale.current)))
+        }
+
+        guard !Task.isCancelled, !tracks.isEmpty else { return }
+        subtitleGroup = group
+        subtitleOptionMap = map
+        availableSubtitleTracks = tracks
+
+        let selected = item.currentMediaSelection.selectedMediaOption(in: group)
+        if let selected, let entry = map.first(where: { $0.value == selected }) {
+            currentSubtitleTrack = tracks.first(where: { $0.id == entry.key })
+        }
+        subtitleTrackBroadcast.yield(tracks)
+    }
+
+    /// Filter predicate for real user-selectable subtitle options.
+    /// Extracted as `nonisolated static` for unit testability — takes primitives, not AVFoundation objects.
+    nonisolated static func subtitleOptionPasses(
+        mediaType: AVMediaType,
+        isForced: Bool,
+        isAccessibility: Bool
+    ) -> Bool {
+        mediaType != .closedCaption
+            && !isForced
+            && !isAccessibility
+    }
+
+    // MARK: - BoomstreamPlayerController subtitle API
+
+    public func selectSubtitleTrack(_ track: SubtitleTrack) {
+        guard let group = subtitleGroup,
+              let option = subtitleOptionMap[track.id],
+              let item = player.currentItem
+        else { return }
+        item.select(option, in: group)
+        currentSubtitleTrack = track
+    }
+
+    public func selectNoSubtitles() {
+        guard let group = subtitleGroup,
+              let item = player.currentItem
+        else { return }
+        item.select(nil, in: group)
+        currentSubtitleTrack = nil
     }
 
     private func variantsToQualities(_ variants: [AVAssetVariant]) -> [VideoQuality] {
@@ -342,6 +505,27 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         }
     }
 
+    // MARK: - BoomstreamPlayerController speed API
+
+    public func setSpeed(_ speed: PlayerSpeed) {
+        currentSpeed = speed
+        // Apply immediately if currently playing; play() re-applies on next resume.
+        if player.timeControlStatus == .playing {
+            player.rate = speed.rawValue
+        }
+    }
+
+    // MARK: - BoomstreamPlayerController audio API
+
+    public func selectAudioTrack(_ track: AudioTrack) {
+        guard let group = audioGroup,
+              let option = audioOptionMap[track.id],
+              let item = player.currentItem
+        else { return }
+        item.select(option, in: group)
+        currentAudioTrack = track
+    }
+
     private func handleTimeControlChange() {
         guard case .ready = state else { return }
         switch player.timeControlStatus {
@@ -385,7 +569,12 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
 
     // MARK: - BoomstreamPlayerController
 
-    public func play() { player.play() }
+    public func play() {
+        player.play()
+        // AVPlayer.play() resets rate to 1.0; re-apply non-normal speed immediately.
+        if currentSpeed != .normal { player.rate = currentSpeed.rawValue }
+    }
+
     public func pause() { player.pause() }
 
     public func seek(to seconds: TimeInterval) {

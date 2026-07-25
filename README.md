@@ -166,6 +166,52 @@ for await qualities in controller.qualityUpdates { ... }   // AsyncStream<[Video
 (до этого `availableQualities` — пустой список). Выбранное качество сохраняется при
 переключении треков плейлиста; `.auto` снимает ограничение и возвращает адаптивный выбор.
 
+### Меню настроек и локализация
+
+Включите единую шторку «Настройки» флагом `showSettingsMenu`. Шторка содержит разделы «Скорость», «Качество» (при наличии HLS-вариантов) и «Аудио» (при нескольких треках).
+
+```swift
+BoomstreamPlayerView(
+    mediaCode: "XXXXXXXX",
+    advancedOptions: AdvancedPlayerOptions(showSettingsMenu: true, locale: "ru")
+)
+```
+
+Язык строк меню задаётся через `locale` (ISO 639-1 код; поддерживаются `"en"`, `"ru"`; по умолчанию `"en"`). Locale не привязан к системной локали — вы управляете им явно. В SwiftUI-плеере смена `locale` применяется динамически без перезагрузки медиа.
+
+Программное управление скоростью и аудио:
+
+```swift
+controller.availableSpeeds                    // [PlayerSpeed] — все предустановки
+controller.currentSpeed                       // применённая скорость
+controller.setSpeed(.oneHalf)                 // 1.5× (PlayerSpeed: .half … .double)
+
+controller.availableAudioTracks               // [AudioTrack] — пустой до readyToPlay или при одном треке
+controller.currentAudioTrack                  // AudioTrack?
+controller.selectAudioTrack(track)            // track из availableAudioTracks
+
+for await tracks in controller.audioTrackUpdates { ... }  // AsyncStream<[AudioTrack]>
+```
+
+### Стилизация плеера
+
+`BoomstreamPlayerStyle` перекрашивает встроенные контролы, лоадер и оверлей ошибки. Все поля опциональны — `nil` сохраняет системное оформление.
+
+```swift
+let style = BoomstreamPlayerStyle(
+    loaderColor: UIColor(red: 0.4, green: 0.17, blue: 1, alpha: 1),   // #662BFF
+    accentColor: UIColor(red: 0.4, green: 0.17, blue: 1, alpha: 1)
+    // seekBarPlayedColor, seekBarScrubberColor, seekBarBufferedColor,
+    // messageTextColor, messageBackgroundColor — тоже опциональны
+)
+
+// SwiftUI
+BoomstreamPlayerView(mediaCode: "XXXXXXXX", style: style)
+
+// UIKit — живое обновление без перезагрузки:
+playerView.style = style
+```
+
 ### Защищённый контент
 
 Для воспроизведения защищённых потоков передайте токен доступа проекта — SDK добавит его в User-Agent всех медиа-запросов (манифест, сегменты, ключи):
@@ -192,7 +238,9 @@ BoomstreamPlayerView(
     advancedOptions: AdvancedPlayerOptions(
         preferredForwardBufferDuration: 10,          // сек упреждающего буфера (0 = авто)
         automaticallyWaitsToMinimizeStalling: true,
-        preferredPeakBitRate: 0                      // бит/с (0 = адаптивный выбор)
+        preferredPeakBitRate: 0,                     // бит/с (0 = адаптивный выбор)
+        showSettingsMenu: true,                      // шестерёнка → единое меню настроек
+        locale: "ru"                                 // язык строк меню ("en" по умолчанию)
     )
 )
 ```
@@ -282,7 +330,7 @@ cp Config/Local.xcconfig.example Config/Local.xcconfig   # заполните з
 open BoomstreamExample.xcodeproj
 ```
 
-Две вкладки: **«Медиа»** (плеер + листинги видео/трансляций/плейлистов из API + офлайн-загрузка выбранного медиа) и **«Player API»** (программное управление, прогресс, лог событий). Проект сгенерирован XcodeGen (`project.yml`); регенерация нужна только при его изменении.
+Две вкладки: **«Медиа»** (плеер + листинги видео/трансляций/плейлистов из API + офлайн-загрузка выбранного медиа) и **«Player API»** (программное управление, прогресс, лог событий; смена цветовой темы плеера через `BoomstreamPlayerStyle`; переключатель языка меню настроек `locale`). Проект сгенерирован XcodeGen (`project.yml`); регенерация нужна только при его изменении.
 
 Примечание: некоторые защищённые потоки не воспроизводятся на iOS Simulator — проверяйте на реальном устройстве.
 
