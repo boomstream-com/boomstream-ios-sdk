@@ -193,6 +193,65 @@ controller.selectAudioTrack(track)            // track из availableAudioTracks
 for await tracks in controller.audioTrackUpdates { ... }  // AsyncStream<[AudioTrack]>
 ```
 
+### AirPlay (v1, незащищённый контент)
+
+AirPlay включается автоматически — SDK устанавливает `allowsExternalPlayback = true` на `AVPlayer` при каждой загрузке медиа. Кнопку выбора приёмника SDK не встраивает: разместите [`AVRoutePickerView`](https://developer.apple.com/documentation/avkit/avroutepickerview) в своём UI самостоятельно.
+
+**SwiftUI — кнопка выбора приёмника:**
+
+```swift
+import AVKit
+
+/// Оберните AVRoutePickerView в UIViewRepresentable — разместите где удобно в своём layout.
+struct AirPlayButton: UIViewRepresentable {
+    func makeUIView(context: Context) -> AVRoutePickerView {
+        let picker = AVRoutePickerView()
+        picker.prioritizesVideoDevices = true   // видео-приёмники первыми в списке
+        return picker
+    }
+    func updateUIView(_ uiView: AVRoutePickerView, context: Context) {}
+}
+
+// Пример: рядом с плеером
+VStack {
+    BoomstreamPlayerView(mediaCode: "XXXXXXXX")
+        .aspectRatio(16 / 9, contentMode: .fit)
+    HStack {
+        Spacer()
+        AirPlayButton().frame(width: 44, height: 44)
+    }
+}
+```
+
+**UIKit — кнопка выбора приёмника:**
+
+```swift
+import AVKit
+
+let routePicker = AVRoutePickerView(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+toolbar.addSubview(routePicker)
+```
+
+**Наблюдение за состоянием через `BoomstreamPlayerController`:**
+
+```swift
+// Текущее состояние (синхронно)
+controller.isAirPlaying       // Bool
+controller.airPlayDeviceName  // String? — имя приёмника, nil когда не активно
+
+// Поток изменений (true = началась, false = закончилась)
+for await active in controller.airPlayUpdates {
+    let device = controller.airPlayDeviceName
+    if active { print("Трансляция на \(device ?? "ТВ")") }
+}
+```
+
+Пока идёт трансляция, видео и звук воспроизводятся на приёмнике: плеер показывает постер и баннер «📺 Casting to \<device\>» (локализуется через `AdvancedPlayerOptions.locale`), а встроенные контролы (play/pause/seek/качество) продолжают работать и управляют внешним стримом.
+
+SDK при создании плеера настраивает аудиосессию приложения: `AVAudioSession` категория `.playback`, режим `.moviePlayback`. Это обязательное условие видео-handoff (без него AirPlay передаёт только звук) — заодно звук воспроизводится и при включённом беззвучном переключателе.
+
+> **v1 ограничение:** AirPlay работает только для **незащищённого** контента (без `ua_allow`-токена). Поддержка защищённых потоков появится в следующих версиях (подписанные ссылки).
+
 ### Стилизация плеера
 
 `BoomstreamPlayerStyle` перекрашивает встроенные контролы, лоадер и оверлей ошибки. Все поля опциональны — `nil` сохраняет системное оформление.
@@ -348,6 +407,7 @@ SDK распространяется только через Swift Package Manag
 ## Документация
 
 - [Архитектура SDK](docs/SDK_ARCHITECTURE.md)
+- [Player API — справочник](docs/PLAYER-API.md)
 
 ## License
 

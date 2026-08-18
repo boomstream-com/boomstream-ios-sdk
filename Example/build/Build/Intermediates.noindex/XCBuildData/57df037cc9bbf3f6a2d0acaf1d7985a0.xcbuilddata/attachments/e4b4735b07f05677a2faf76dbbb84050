@@ -1,0 +1,4 @@
+module BoomstreamOffline {
+header "BoomstreamOffline-Swift.h"
+export *
+}

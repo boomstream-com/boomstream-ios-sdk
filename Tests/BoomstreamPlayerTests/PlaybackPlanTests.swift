@@ -33,7 +33,7 @@ private func config(_ json: String) throws -> ConfigResponse {
     """)
     let plan = PlaybackPlan.make(from: response)
     #expect(plan == .play(
-        items: [PlayableItem(title: "Movie", url: URL(string: hlsURLString)!)],
+        items: [PlayableItem(title: "Movie", url: URL(string: hlsURLString)!, posterURL: nil)],
         isPlaylist: false,
         isLive: false,
         systemMessage: nil
@@ -107,4 +107,33 @@ private func config(_ json: String) throws -> ConfigResponse {
     }
     #expect(items.count == 1)
     #expect(isLive)
+}
+
+@Test func vodPosterURLTakenFromWidestPoster() throws {
+    let response = try config("""
+    {"mediaData": {
+      "title": "Movie", "code": "m1",
+      "links": {"hls": "\(hlsB64)"},
+      "posters": [
+        {"width": 320, "height": 180, "link": "https://cdn.example.com/small.jpg"},
+        {"width": 1280, "height": 720, "link": "https://cdn.example.com/big.jpg"}
+      ]
+    }}
+    """)
+    guard case .play(let items, _, _, _) = PlaybackPlan.make(from: response) else {
+        Issue.record("expected .play")
+        return
+    }
+    #expect(items.first?.posterURL == URL(string: "https://cdn.example.com/big.jpg"))
+}
+
+@Test func vodWithNoPostersHasNilPosterURL() throws {
+    let response = try config("""
+    {"mediaData": {"title": "Movie", "code": "m1", "links": {"hls": "\(hlsB64)"}}}
+    """)
+    guard case .play(let items, _, _, _) = PlaybackPlan.make(from: response) else {
+        Issue.record("expected .play")
+        return
+    }
+    #expect(items.first?.posterURL == nil)
 }

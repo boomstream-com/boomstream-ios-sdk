@@ -1,0 +1,179 @@
+{
+  "" : {
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPI-primary.dia",
+    "emit-module-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPI-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPI-primary-emit-module.dia",
+    "pch" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPI-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPI-primary.swiftdeps"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/Boomstream.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Boomstream.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Boomstream.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Boomstream.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Boomstream.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Boomstream.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Boomstream.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Boomstream.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Boomstream~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/BoomstreamAPIClient.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPIClient.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPIClient.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPIClient.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPIClient.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPIClient.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPIClient.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPIClient.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAPIClient~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/BoomstreamConfigClient.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamConfigClient.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamConfigClient.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamConfigClient.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamConfigClient.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamConfigClient.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamConfigClient.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamConfigClient.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamConfigClient~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/BoomstreamError.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamError.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamError.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamError.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamError.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamError.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamError.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamError.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamError~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/BoomstreamOfflineCache.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOfflineCache.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOfflineCache.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOfflineCache.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOfflineCache.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOfflineCache.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOfflineCache.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOfflineCache.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOfflineCache~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/BoomstreamOptions.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOptions.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOptions.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOptions.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOptions.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOptions.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOptions.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOptions.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamOptions~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/Internal/APIDTOs.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/APIDTOs.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/APIDTOs.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/APIDTOs.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/APIDTOs.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/APIDTOs.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/APIDTOs.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/APIDTOs.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/APIDTOs~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/Internal/BoomstreamAssetOptions.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAssetOptions.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAssetOptions.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAssetOptions.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAssetOptions.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAssetOptions.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAssetOptions.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAssetOptions.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamAssetOptions~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/Internal/BoomstreamHTTPClient.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamHTTPClient.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamHTTPClient.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamHTTPClient.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamHTTPClient.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamHTTPClient.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamHTTPClient.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamHTTPClient.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamHTTPClient~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/Internal/Broadcast.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Broadcast.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Broadcast.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Broadcast.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Broadcast.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Broadcast.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Broadcast.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Broadcast.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Broadcast~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/Model/BoomstreamMedia.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamMedia.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamMedia.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamMedia.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamMedia.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamMedia.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamMedia.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamMedia.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/BoomstreamMedia~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/Model/ConfigResponse.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ConfigResponse.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ConfigResponse.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ConfigResponse.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ConfigResponse.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ConfigResponse.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ConfigResponse.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ConfigResponse.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ConfigResponse~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/Model/ListItems.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ListItems.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ListItems.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ListItems.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ListItems.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ListItems.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ListItems.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ListItems.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/ListItems~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/Model/MediaData.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaData.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaData.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaData.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaData.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaData.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaData.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaData.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaData~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/Model/MediaLinks.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaLinks.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaLinks.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaLinks.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaLinks.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaLinks.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaLinks.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaLinks.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/MediaLinks~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/Model/Poster.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Poster.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Poster.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Poster.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Poster.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Poster.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Poster.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Poster.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Poster~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamAPI/Version.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Version.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Version.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Version.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Version.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Version.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Version.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Version.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamAPI.build/Objects-normal/arm64/Version~partial.swiftmodule"
+  }
+}

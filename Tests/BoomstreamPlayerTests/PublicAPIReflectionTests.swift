@@ -114,3 +114,24 @@ private func isForbidden(_ typeName: String) -> Bool {
     let typeName = String(describing: type(of: opts))
     #expect(!isForbidden(typeName))
 }
+
+// MARK: - AirPlay API surface
+
+@MainActor
+@Test func controllerAirPlayAPIReturnsPrimitiveTypes() {
+    let core = BoomstreamPlayerCore()
+
+    // isAirPlaying: Bool — no AVFoundation type
+    let isPlaying: Bool = core.isAirPlaying
+    #expect(isPlaying == false)
+    #expect(!isForbidden(String(describing: type(of: isPlaying))))
+
+    // airPlayDeviceName: String? — no AVFoundation type
+    let deviceName: String? = core.airPlayDeviceName
+    #expect(deviceName == nil)
+
+    // airPlayUpdates: AsyncStream<Bool> — pure Swift, no AV types
+    let _: AsyncStream<Bool> = core.airPlayUpdates
+
+    core.release()
+}

@@ -1,3 +1,4 @@
+import AVKit
 import BoomstreamAPI
 import BoomstreamPlayer
 import SwiftUI
@@ -16,6 +17,8 @@ struct PlayerAPITabView: View {
     @State private var currentQuality: VideoQuality = .auto
     @State private var stylePreset: StylePreset = .defaultStyle
     @State private var selectedLocale: String = "en"
+    @State private var isAirPlaying = false
+    @State private var airPlayDeviceName: String? = nil
 
     var body: some View {
         if let code = vm.selectedMediaCode {
@@ -54,6 +57,7 @@ struct PlayerAPITabView: View {
         .task(id: code) { await observeProgress() }
         .task(id: code) { await observeEvents() }
         .task(id: code) { await observeQualities() }
+        .task(id: code) { await observeAirPlay() }
         .onChange(of: code) { _ in
             resetPerMediaState()
         }
@@ -71,6 +75,7 @@ struct PlayerAPITabView: View {
                         .background(RoundedRectangle(cornerRadius: 8).fill(Color.accentColor.opacity(0.15)))
                 }
                 controlsSection
+                airPlaySection
                 styleSection
                 localeSection
                 qualitySection
@@ -121,6 +126,24 @@ struct PlayerAPITabView: View {
             }
         }
         .buttonStyle(.bordered)
+    }
+
+    // MARK: - AirPlay demo
+
+    private var airPlaySection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("AirPlay").font(.headline)
+            Text("Нажмите кнопку ниже, чтобы выбрать AirPlay-приёмник. SDK не встраивает кнопку — интегратор размещает AVRoutePickerView самостоятельно.")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            AirPlayButton()
+                .frame(width: 44, height: 44)
+            Text(isAirPlaying
+                ? "▶ Трансляция на \(airPlayDeviceName ?? "ТВ")"
+                : "AirPlay: нет трансляции")
+                .font(.subheadline)
+                .foregroundColor(isAirPlaying ? .primary : .secondary)
+        }
     }
 
     // MARK: - Style demo
@@ -275,6 +298,14 @@ struct PlayerAPITabView: View {
         }
     }
 
+    private func observeAirPlay() async {
+        guard let controller = await waitForController() else { return }
+        for await active in controller.airPlayUpdates {
+            isAirPlaying = active
+            airPlayDeviceName = controller.airPlayDeviceName
+        }
+    }
+
     private func waitForController() async -> (any BoomstreamPlayerController)? {
         for _ in 0..<100 where proxy.controller == nil {
             try? await Task.sleep(nanoseconds: 50_000_000)
@@ -294,6 +325,8 @@ struct PlayerAPITabView: View {
         lastLoggedProgressDecade = -1
         availableQualities = []
         currentQuality = .auto
+        isAirPlaying = false
+        airPlayDeviceName = nil
     }
 }
 
@@ -342,4 +375,19 @@ enum StylePreset: String, CaseIterable, Identifiable {
             )
         }
     }
+}
+
+// MARK: - AirPlay button
+
+/// Integrator-placed AirPlay picker: the SDK does not embed this button.
+/// Drop into any SwiftUI layout — the system-provided AVRoutePickerView
+/// shows a picker sheet with available AirPlay receivers.
+struct AirPlayButton: UIViewRepresentable {
+    func makeUIView(context: Context) -> AVRoutePickerView {
+        let picker = AVRoutePickerView()
+        // Видео-приёмники первыми в списке — иначе пикер выглядит как выбор аудио-колонки.
+        picker.prioritizesVideoDevices = true
+        return picker
+    }
+    func updateUIView(_ uiView: AVRoutePickerView, context: Context) {}
 }

@@ -20,10 +20,12 @@ public final class BoomstreamPlayerUIView: UIView {
     private let loaderSpinner = UIActivityIndicatorView(style: .large)
     private let controls = PlayerControlsOverlay()
     private let liveBadge = LiveStatusBadge()
+    private let airPlayBanner = UILabel()
     private var stateTask: Task<Void, Never>?
     private var eventsTask: Task<Void, Never>?
     private var progressTask: Task<Void, Never>?
     private var qualityTask: Task<Void, Never>?
+    private var airPlayTask: Task<Void, Never>?
     private var autoHideTask: Task<Void, Never>?
     private var posterFetchTask: Task<Void, Never>?
     private var isPlaying = false
@@ -96,6 +98,14 @@ public final class BoomstreamPlayerUIView: UIView {
         liveBadge.isHidden = true
         addSubview(liveBadge)
 
+        airPlayBanner.textColor = .white
+        airPlayBanner.textAlignment = .center
+        airPlayBanner.numberOfLines = 0
+        airPlayBanner.font = .preferredFont(forTextStyle: .headline)
+        airPlayBanner.translatesAutoresizingMaskIntoConstraints = false
+        airPlayBanner.isHidden = true
+        addSubview(airPlayBanner)
+
         NSLayoutConstraint.activate([
             posterView.topAnchor.constraint(equalTo: topAnchor),
             posterView.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -121,6 +131,11 @@ public final class BoomstreamPlayerUIView: UIView {
             controls.trailingAnchor.constraint(equalTo: trailingAnchor),
             liveBadge.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 8),
             liveBadge.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 8),
+
+            airPlayBanner.centerXAnchor.constraint(equalTo: centerXAnchor),
+            airPlayBanner.centerYAnchor.constraint(equalTo: centerYAnchor),
+            airPlayBanner.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 16),
+            airPlayBanner.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16),
         ])
 
         wireControls()
@@ -155,6 +170,12 @@ public final class BoomstreamPlayerUIView: UIView {
                 guard self?.storedAdvancedOptions.showSettingsMenu == false else { continue }
                 let visible = (self?.storedAdvancedOptions.showQualitySelector == true) && !qualities.isEmpty
                 self?.controls.update(gearButtonVisible: visible)
+            }
+        }
+        airPlayTask = Task { [weak self] in
+            guard let stream = self?.core.airPlayUpdates else { return }
+            for await isAirPlaying in stream {
+                self?.updateAirPlayOverlay(isAirPlaying)
             }
         }
     }
@@ -227,13 +248,14 @@ public final class BoomstreamPlayerUIView: UIView {
 
     /// Полная остановка воспроизведения и подписок. Обязателен при ручном UIKit-использовании.
     public func release() {
-        for task in [stateTask, eventsTask, progressTask, qualityTask, autoHideTask, posterFetchTask] {
+        for task in [stateTask, eventsTask, progressTask, qualityTask, airPlayTask, autoHideTask, posterFetchTask] {
             task?.cancel()
         }
         stateTask = nil
         eventsTask = nil
         progressTask = nil
         qualityTask = nil
+        airPlayTask = nil
         autoHideTask = nil
         posterFetchTask = nil
         core.release()
@@ -473,6 +495,33 @@ public final class BoomstreamPlayerUIView: UIView {
             responder = r.next
         }
         return nil
+    }
+
+    // MARK: - AirPlay overlay
+
+    private func updateAirPlayOverlay(_ isAirPlaying: Bool) {
+        // playerLayer НЕ прятать: это корневой слой view — вместе с ним исчезают баннер,
+        // постер и контролы (чёрный экран). При external playback AVPlayerLayer сам
+        // перестаёт рендерить видео; паритет с Android = постер + scrim поверх, контролы
+        // остаются и управляют внешним стримом.
+        if isAirPlaying {
+            if posterView.image != nil { posterView.isHidden = false }
+            let locale = storedAdvancedOptions.locale
+            let prefix = BoomstreamMessages.resolve("bsp_airplay_casting_to", locale: locale)
+            if let deviceName = core.airPlayDeviceName {
+                airPlayBanner.text = "📺 \(prefix) \(deviceName)"
+            } else {
+                airPlayBanner.text = "📺 " + BoomstreamMessages.resolve("bsp_airplay_casting_none", locale: locale)
+            }
+            airPlayBanner.isHidden = false
+            if isControlsEnabled {
+                setControls(visible: true)
+                scheduleAutoHide()
+            }
+        } else {
+            airPlayBanner.isHidden = true
+            apply(state: core.state)
+        }
     }
 
     // MARK: - Poster / message

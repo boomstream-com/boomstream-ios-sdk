@@ -1,0 +1,4 @@
+module BoomstreamPlayer {
+header "BoomstreamPlayer-Swift.h"
+export *
+}

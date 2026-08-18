@@ -12,8 +12,10 @@ enum BoomstreamMessages {
         "settings_quality":      ["en": "Quality",       "ru": "Качество"],
         "settings_speed_normal": ["en": "Normal (1×)",   "ru": "Обычная (1×)"],
         "settings_quality_auto": ["en": "Auto",          "ru": "Авто"],
-        "subtitles_title":       ["en": "Subtitles",     "ru": "Субтитры"],
-        "subtitles_off":         ["en": "Off",           "ru": "Выкл"],
+        "subtitles_title":         ["en": "Subtitles",     "ru": "Субтитры"],
+        "subtitles_off":           ["en": "Off",           "ru": "Выкл"],
+        "bsp_airplay_casting_to":  ["en": "Casting to",   "ru": "Трансляция на"],
+        "bsp_airplay_casting_none": ["en": "Casting to TV", "ru": "Трансляция на ТВ"],
     ]
 
     /// Returns the localized string for `key` in the given `locale` (ISO 639-1 code, e.g. "ru", "en").

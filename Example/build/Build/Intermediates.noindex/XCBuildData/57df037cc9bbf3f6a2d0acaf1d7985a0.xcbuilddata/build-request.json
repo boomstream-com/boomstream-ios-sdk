@@ -1,0 +1,71 @@
+{
+  "buildCommand" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildOnly"
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "28cb0faead0e7065fe6e9d5b3dd428bf6f044cfbbc8a726dd120dae2b49311ca"
+    }
+  ],
+  "containerPath" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/BoomstreamExample.xcodeproj",
+  "continueBuildingAfterErrors" : false,
+  "dependencyScope" : "workspace",
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "undefined_arch",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : true,
+      "hostTargetedPlatform" : null,
+      "platform" : "iphoneos",
+      "sdk" : "iphoneos26.5",
+      "sdkVariant" : "iphoneos",
+      "supportedArchitectures" : [
+        "armv4t",
+        "armv5",
+        "armv6",
+        "armv7",
+        "armv7f",
+        "armv7s",
+        "armv7k",
+        "arm64",
+        "arm64e"
+      ],
+      "targetArchitecture" : "undefined_arch"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Products",
+      "derivedDataPath" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build",
+      "indexDataStoreFolderPath" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Index.noindex/PrecompiledHeaders",
+      "pchPath" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Debug",
+    "overrides" : {
+      "commandLine" : {
+        "table" : {
+          "DEVELOPMENT_TEAM" : "4456WUWFBV"
+        }
+      },
+      "synthesized" : {
+        "table" : {
+          "ACTION" : "build",
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "YES",
+          "ONLY_ACTIVE_ARCH" : "YES"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}

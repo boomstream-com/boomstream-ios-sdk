@@ -1,0 +1,79 @@
+{
+  "" : {
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOffline-primary.dia",
+    "emit-module-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOffline-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOffline-primary-emit-module.dia",
+    "pch" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOffline-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOffline-primary.swiftdeps"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamOffline/BoomstreamDownloads.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamDownloads.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamDownloads.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamDownloads.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamDownloads.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamDownloads.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamDownloads.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamDownloads.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamDownloads~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamOffline/BoomstreamOfflineManager.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOfflineManager.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOfflineManager.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOfflineManager.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOfflineManager.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOfflineManager.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOfflineManager.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOfflineManager.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/BoomstreamOfflineManager~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamOffline/DownloadQuality.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadQuality.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadQuality.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadQuality.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadQuality.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadQuality.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadQuality.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadQuality.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadQuality~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamOffline/DownloadRecordStore.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadRecordStore.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadRecordStore.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadRecordStore.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadRecordStore.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadRecordStore.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadRecordStore.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadRecordStore.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadRecordStore~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamOffline/DownloadState.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadState.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadState.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadState.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadState.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadState.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadState.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadState.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/DownloadState~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamOffline/ManifestInspector.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/ManifestInspector.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/ManifestInspector.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/ManifestInspector.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/ManifestInspector.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/ManifestInspector.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/ManifestInspector.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/ManifestInspector.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/ManifestInspector~partial.swiftmodule"
+  },
+  "/Users/obidnov/Projects/boomstream-ios-sdk/Sources/BoomstreamOffline/StorageStats.swift" : {
+    "const-values" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/StorageStats.swiftconstvalues",
+    "dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/StorageStats.d",
+    "diagnostics" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/StorageStats.dia",
+    "index-unit-output-path" : "/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/StorageStats.o",
+    "llvm-bc" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/StorageStats.bc",
+    "object" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/StorageStats.o",
+    "swift-dependencies" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/StorageStats.swiftdeps",
+    "swiftmodule" : "/Users/obidnov/Projects/boomstream-ios-sdk/Example/build/Build/Intermediates.noindex/BoomstreamSDK.build/Debug-iphoneos/BoomstreamOffline.build/Objects-normal/arm64/StorageStats~partial.swiftmodule"
+  }
+}

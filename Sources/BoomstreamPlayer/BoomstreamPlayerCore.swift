@@ -1,5 +1,10 @@
 import AVFoundation
+#if os(iOS)
+// AVPlayerItem.externalMetadata — AVKit-расширение; без импорта iOS-сборка не видит член.
+import AVKit
+#endif
 import Foundation
+import MediaPlayer
 import BoomstreamAPI
 
 /// Ядро плеера: config-резолв → AVPlayer → маппинг в `PlayerState`/`PlayerEvent`.
@@ -44,6 +49,9 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
     private var variantDiscoveryTask: Task<Void, Never>?
     private var audioDiscoveryTask: Task<Void, Never>?
     private var subtitleDiscoveryTask: Task<Void, Never>?
+    private var artworkTask: Task<Void, Never>?
+    /// Injectable URLSession for artwork download — overridable in tests via @testable import.
+    var artworkSession: URLSession = .shared
     private var statusObservation: NSKeyValueObservation?
     private var timeControlObservation: NSKeyValueObservation?
     // nonisolated(unsafe): мутация только на MainActor; чтение из deinit безопасно
@@ -95,11 +103,47 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
     private var subtitleGroup: AVMediaSelectionGroup? = nil
     private var subtitleOptionMap: [String: AVMediaSelectionOption] = [:]
 
+    // MARK: - AirPlay state
+
+    public private(set) var isAirPlaying: Bool = false
+    /// Human-readable name of the active AirPlay receiver; nil when not streaming.
+    /// Sourced from AVAudioSession.routeChangeNotification — AVFoundation types stay internal.
+    public private(set) var airPlayDeviceName: String? = nil
+
+    private let airPlayBroadcast = Broadcast<Bool>()
+    public var airPlayUpdates: AsyncStream<Bool> { airPlayBroadcast.stream() }
+
+    private var externalPlaybackObservation: NSKeyValueObservation?
+    // nonisolated(unsafe): мутация только на MainActor; чтение из deinit безопасно.
+    private nonisolated(unsafe) var routeChangeObserverToken: (any NSObjectProtocol)?
+
     public init(livePollInterval: TimeInterval = 15) {
         self.livePollInterval = livePollInterval
+        player.allowsExternalPlayback = true
+        #if os(iOS) || os(tvOS)
+        player.usesExternalPlaybackWhileExternalScreenIsActive = true
+        // Без категории .playback система оставляет дефолтный .soloAmbient: AirPlay-роут
+        // работает как чистый аудио-выход и видео-handoff (isExternalPlaybackActive)
+        // никогда не включается. Аналог управления audio focus в Android-SDK.
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
+        try? AVAudioSession.sharedInstance().setActive(true)
+        #endif
         timeControlObservation = player.observe(\.timeControlStatus, options: [.new]) { [weak self] _, _ in
             Task { @MainActor [weak self] in self?.handleTimeControlChange() }
         }
+        externalPlaybackObservation = player.observe(\.isExternalPlaybackActive, options: [.new]) { [weak self] p, _ in
+            let active = p.isExternalPlaybackActive
+            Task { @MainActor [weak self] in self?.handleExternalPlaybackChange(active) }
+        }
+        #if os(iOS)
+        routeChangeObserverToken = NotificationCenter.default.addObserver(
+            forName: AVAudioSession.routeChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in self?.handleRouteChange() }
+        }
+        #endif
         timeObserverToken = player.addPeriodicTimeObserver(
             forInterval: CMTime(seconds: 0.5, preferredTimescale: 600),
             queue: .main
@@ -116,11 +160,16 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         if let token = endObserverToken {
             NotificationCenter.default.removeObserver(token)
         }
+        if let token = routeChangeObserverToken {
+            NotificationCenter.default.removeObserver(token)
+        }
+        externalPlaybackObservation?.invalidate()
         loadTask?.cancel()
         pollTask?.cancel()
         variantDiscoveryTask?.cancel()
         audioDiscoveryTask?.cancel()
         subtitleDiscoveryTask?.cancel()
+        artworkTask?.cancel()
     }
 
     // MARK: - Loading
@@ -142,7 +191,7 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         // Локальная копия имеет приоритет над сетью — офлайн-плейбек без config-запроса.
         if let localURL = offlineCache?.localAssetURL(mediaCode: mediaCode) {
             state = .loading
-            items = [PlayableItem(title: nil, url: localURL)]
+            items = [PlayableItem(title: nil, url: localURL, posterURL: nil)]
             isPlaylistMode = false
             isLiveContent = false
             systemMessage = nil
@@ -159,6 +208,12 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
     /// Полный teardown: остановить всё, вернуть `.idle`.
     public func release() {
         stopPlayback()
+        externalPlaybackObservation?.invalidate()
+        externalPlaybackObservation = nil
+        if let token = routeChangeObserverToken {
+            NotificationCenter.default.removeObserver(token)
+            routeChangeObserverToken = nil
+        }
         configClient = nil
         state = .idle
     }
@@ -174,8 +229,11 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         audioDiscoveryTask = nil
         subtitleDiscoveryTask?.cancel()
         subtitleDiscoveryTask = nil
+        artworkTask?.cancel()
+        artworkTask = nil
         detachCurrentItemObservers()
         player.replaceCurrentItem(with: nil)
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
         items = []
         currentIndex = 0
         isPlaylistMode = false
@@ -192,7 +250,11 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         currentSubtitleTrack = nil
         subtitleGroup = nil
         subtitleOptionMap = [:]
+        if isAirPlaying { airPlayBroadcast.yield(false) }
+        isAirPlaying = false
+        airPlayDeviceName = nil
         // preferredQuality, qualityOverride, and currentSpeed intentionally preserved across load() calls
+        // externalPlaybackObservation and routeChangeObserverToken are player-level; torn down in release().
     }
 
     private func resolveAndStart(mediaCode: String, forceRefresh: Bool, allowPolling: Bool) async {
@@ -244,6 +306,8 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
     private func playItem(at index: Int) {
         guard items.indices.contains(index) else { return }
         detachCurrentItemObservers()
+        artworkTask?.cancel()
+        artworkTask = nil
         currentIndex = index
         let playable = items[index]
         currentTitle = playable.title
@@ -258,6 +322,12 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         if let override = qualityOverride {
             applyQualityToItem(item, quality: override)
         }
+
+        #if os(iOS)
+        item.externalMetadata = makeExternalMetadata(title: playable.title)
+        #endif
+        updateNowPlayingInfo(title: playable.title)
+        startArtworkTask(posterURL: playable.posterURL, for: item)
 
         statusObservation = item.observe(\.status, options: [.new]) { [weak self] observedItem, _ in
             let status = observedItem.status
@@ -285,6 +355,86 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         }
     }
 
+    // MARK: - Metadata helpers
+
+    #if os(iOS)
+    private func makeExternalMetadata(title: String?) -> [AVMetadataItem] {
+        guard let title else { return [] }
+        let titleItem = AVMutableMetadataItem()
+        titleItem.identifier = .commonIdentifierTitle
+        titleItem.value = title as NSString
+        titleItem.extendedLanguageTag = "und"
+        return [titleItem]
+    }
+
+    private func makeArtworkMetadataItem(from data: Data) -> AVMutableMetadataItem {
+        let artItem = AVMutableMetadataItem()
+        artItem.identifier = .commonIdentifierArtwork
+        artItem.value = data as NSData
+        if let dataType = BoomstreamPlayerCore.artworkDataType(from: data) {
+            artItem.dataType = dataType
+        }
+        artItem.extendedLanguageTag = "und"
+        return artItem
+    }
+    #endif
+
+    /// Fetches artwork data, returning nil when the HTTP status ≠ 200 or on any network error.
+    nonisolated static func fetchArtworkData(from url: URL, session: URLSession) async -> Data? {
+        guard let (data, response) = try? await session.data(from: url),
+              (response as? HTTPURLResponse)?.statusCode == 200
+        else { return nil }
+        return data
+    }
+
+    /// Sniffs magic bytes to determine the CoreMedia dataType for artwork metadata.
+    /// Returns kCMMetadataBaseDataType_JPEG for JPEG; nil for all other formats
+    /// (PNG, WebP, unknown) — AVFoundation probes untyped data itself.
+    nonisolated static func artworkDataType(from data: Data) -> String? {
+        guard data.count >= 3,
+              data[0] == 0xFF, data[1] == 0xD8, data[2] == 0xFF
+        else { return nil }
+        return kCMMetadataBaseDataType_JPEG as String
+    }
+
+    private func updateNowPlayingInfo(title: String?) {
+        var info: [String: Any] = [:]
+        if let title { info[MPMediaItemPropertyTitle] = title }
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+    }
+
+    /// Downloads poster asynchronously and attaches it to `externalMetadata` and `nowPlayingInfo`.
+    /// Cancelled on each `playItem(at:)` call and on `stopPlayback()`.
+    private func startArtworkTask(posterURL: URL?, for item: AVPlayerItem) {
+        guard let posterURL else { return }
+        let session = artworkSession
+        artworkTask = Task { [weak self, weak item] in
+            guard let data = await BoomstreamPlayerCore.fetchArtworkData(from: posterURL, session: session),
+                  !Task.isCancelled,
+                  let self,
+                  let item
+            else { return }
+
+            #if os(iOS)
+            let artworkMeta = self.makeArtworkMetadataItem(from: data)
+            var meta = item.externalMetadata.filter { $0.identifier != .commonIdentifierArtwork }
+            meta.append(artworkMeta)
+            item.externalMetadata = meta
+            #endif
+
+            #if canImport(UIKit)
+            if let image = UIImage(data: data) {
+                // @Sendable снимает наследование @MainActor-изоляции: MediaPlayer зовёт
+                // этот handler на своей очереди при пуше Now Playing — иначе SIGTRAP на девайсе.
+                let artwork = MPMediaItemArtwork(boundsSize: image.size) { @Sendable _ in image }
+                var nowPlaying = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
+                nowPlaying[MPMediaItemPropertyArtwork] = artwork
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlaying
+            }
+            #endif
+        }
+    }
+
     // MARK: - AVPlayer callbacks
 
     private func handleStatusChange(_ status: AVPlayerItem.Status, errorText: String?) {
@@ -307,6 +457,22 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         default:
             break
         }
+    }
+
+    // MARK: - AirPlay callbacks
+
+    // Internal (not private) so simulator tests can inject state via @testable import.
+    func handleExternalPlaybackChange(_ active: Bool) {
+        isAirPlaying = active
+        airPlayBroadcast.yield(active)
+        if !active { airPlayDeviceName = nil }
+    }
+
+    private func handleRouteChange() {
+        #if os(iOS)
+        let outputs = AVAudioSession.sharedInstance().currentRoute.outputs
+        airPlayDeviceName = outputs.first(where: { $0.portType == .airPlay })?.portName
+        #endif
     }
 
     // MARK: - Variant discovery

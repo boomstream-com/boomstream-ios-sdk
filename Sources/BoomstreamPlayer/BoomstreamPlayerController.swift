@@ -80,4 +80,14 @@ public protocol BoomstreamPlayerController: AnyObject {
     func selectSubtitleTrack(_ track: SubtitleTrack)
     /// Turn off subtitles (deselect any active track).
     func selectNoSubtitles()
+
+    // MARK: - AirPlay API
+
+    /// `true` while content is being mirrored to an AirPlay device.
+    /// Only primitives are exposed — no AVFoundation types (CSO constraint #1).
+    var isAirPlaying: Bool { get }
+    /// Human-readable name of the active AirPlay receiver, or `nil` when not streaming.
+    var airPlayDeviceName: String? { get }
+    /// Yields `true` when AirPlay begins and `false` when it ends.
+    var airPlayUpdates: AsyncStream<Bool> { get }
 }

@@ -188,3 +188,37 @@ private final class StubOfflineCache: BoomstreamOfflineCache {
     #expect(BoomstreamSDKInfo.userAgent(token: "tok") == "\(BoomstreamSDKInfo.userAgentBase) tok")
     #expect(BoomstreamSDKInfo.userAgent(token: nil) == BoomstreamSDKInfo.userAgentBase)
 }
+
+// MARK: - AirPlay: stopPlayback signal
+
+@MainActor
+@Test func stopPlaybackYieldsFalseToBroadcastWhenAirPlayWasActive() async {
+    let core = BoomstreamPlayerCore()
+    let stream = core.airPlayUpdates
+    var iterator = stream.makeAsyncIterator()
+
+    core.handleExternalPlaybackChange(true)
+    // Simulate stopPlayback() via release() while AirPlay is active.
+    core.release()
+
+    let first = await iterator.next()
+    let second = await iterator.next()
+    #expect(first == true)
+    #expect(second == false, "stopPlayback() must yield false to airPlayBroadcast when isAirPlaying was true")
+}
+
+@MainActor
+@Test func stopPlaybackDoesNotYieldWhenAirPlayWasInactive() async {
+    let core = BoomstreamPlayerCore()
+    var received: [Bool] = []
+    let collectTask = Task {
+        for await value in core.airPlayUpdates {
+            received.append(value)
+        }
+    }
+    // stopPlayback() called without prior AirPlay activation — must not yield false.
+    core.release()
+    collectTask.cancel()
+    await collectTask.value
+    #expect(received.isEmpty, "stopPlayback() must not yield when isAirPlaying was already false")
+}

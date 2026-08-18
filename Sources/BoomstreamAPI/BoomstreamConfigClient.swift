@@ -36,8 +36,10 @@ public final class BoomstreamConfigClient: Sendable, BoomstreamConfigFetching {
     ) {
         self.baseURL = baseURL
         self.userAgentToken = userAgentToken
+        // x-platform позволяет медиасерверу выбирать платформенно-корректную доставку
+        // (схемы шифрования/упаковки различаются между платформами). Только config-эндпоинт.
         self.http = BoomstreamHTTPClient(
-            headers: ["User-Agent": userAgent],
+            headers: ["User-Agent": userAgent, "x-platform": "ios"],
             connectTimeout: connectTimeout,
             resourceTimeout: resourceTimeout,
             retryPolicy: retryPolicy,

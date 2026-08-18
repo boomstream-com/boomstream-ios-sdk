@@ -1,0 +1,18 @@
+Target dependency graph (7 targets)
+Target 'BoomstreamExample' in project 'BoomstreamExample'
+➜ Explicit dependency on target 'BoomstreamAPI' in project 'BoomstreamSDK'
+➜ Explicit dependency on target 'BoomstreamPlayer' in project 'BoomstreamSDK'
+➜ Explicit dependency on target 'BoomstreamOffline' in project 'BoomstreamSDK'
+Target 'BoomstreamOffline' in project 'BoomstreamSDK'
+➜ Explicit dependency on target 'BoomstreamOffline' in project 'BoomstreamSDK'
+➜ Explicit dependency on target 'BoomstreamAPI' in project 'BoomstreamSDK'
+Target 'BoomstreamOffline' in project 'BoomstreamSDK'
+➜ Explicit dependency on target 'BoomstreamAPI' in project 'BoomstreamSDK'
+Target 'BoomstreamPlayer' in project 'BoomstreamSDK'
+➜ Explicit dependency on target 'BoomstreamPlayer' in project 'BoomstreamSDK'
+➜ Explicit dependency on target 'BoomstreamAPI' in project 'BoomstreamSDK'
+Target 'BoomstreamPlayer' in project 'BoomstreamSDK'
+➜ Explicit dependency on target 'BoomstreamAPI' in project 'BoomstreamSDK'
+Target 'BoomstreamAPI' in project 'BoomstreamSDK'
+➜ Explicit dependency on target 'BoomstreamAPI' in project 'BoomstreamSDK'
+Target 'BoomstreamAPI' in project 'BoomstreamSDK' (no dependencies)

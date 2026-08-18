@@ -4,6 +4,7 @@ import BoomstreamAPI
 struct PlayableItem: Equatable, Sendable {
     let title: String?
     let url: URL
+    let posterURL: URL?
 }
 
 /// Чистый резолв config → план воспроизведения. Вся ветвящаяся логика
@@ -46,7 +47,11 @@ enum PlaybackPlan: Equatable, Sendable {
 
     private static func playable(from media: MediaData) -> PlayableItem? {
         guard let url = media.links?.hlsURL else { return nil }
-        return PlayableItem(title: media.title.isEmpty ? nil : media.title, url: url)
+        return PlayableItem(
+            title: media.title.isEmpty ? nil : media.title,
+            url: url,
+            posterURL: bestPoster(media.posters)
+        )
     }
 
     private static func bestPoster(_ posters: [Poster]) -> URL? {

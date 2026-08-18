@@ -5,6 +5,24 @@
 
 ---
 
+## [0.4.0] — 2026-08-18
+
+### Added
+
+- **AirPlay v1** (`BoomstreamPlayer`) — воспроизведение на AirPlay-приёмниках для незащищённого контента. SDK устанавливает `AVPlayer.allowsExternalPlayback = true` автоматически; кнопку выбора приёмника интегратор размещает сам (`AVRoutePickerView`).
+  - `BoomstreamPlayerController.isAirPlaying: Bool` — `true` пока идёт трансляция.
+  - `BoomstreamPlayerController.airPlayDeviceName: String?` — имя активного приёмника, `nil` когда не активно.
+  - `BoomstreamPlayerController.airPlayUpdates: AsyncStream<Bool>` — поток изменений состояния (`true` = началась, `false` = закончилась).
+- **Overlay «Casting to \<device\>»** — `BoomstreamPlayerUIView` автоматически показывает баннер поверх видео при активной AirPlay-трансляции; локализован через `AdvancedPlayerOptions.locale` (`"en"` / `"ru"`).
+- **External metadata** — при каждой загрузке медиа SDK устанавливает `AVPlayerItem.externalMetadata` (название, постер) и обновляет `MPNowPlayingInfoCenter`, чтобы название и постер отображались на экране приёмника и в Control Center.
+- **Аудиосессия** — SDK настраивает `AVAudioSession` (`.playback` / `.moviePlayback`) при создании плеера: обязательное условие AirPlay-видео-handoff; звук также воспроизводится при включённом беззвучном переключателе.
+- **`x-platform: ios`** — заголовок в запросах config-эндпоинта: медиасервер сможет отдавать платформенно-корректную доставку.
+- **Example app** — вкладка «Player API» демонстрирует `AirPlayButton` (`AVRoutePickerView` в SwiftUI-обёртке) и отображение текущего статуса трансляции через `airPlayUpdates`.
+
+> **v1 ограничение:** AirPlay работает только для незащищённого контента. Поддержка защищённых потоков появится в следующих версиях (подписанные ссылки).
+
+---
+
 ## [0.3.0] — 2026-07-25
 
 ### Changed

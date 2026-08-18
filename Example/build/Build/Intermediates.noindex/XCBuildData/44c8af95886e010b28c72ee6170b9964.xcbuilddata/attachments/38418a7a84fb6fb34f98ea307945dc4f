@@ -1,0 +1,4 @@
+module BoomstreamAPI {
+header "BoomstreamAPI-Swift.h"
+export *
+}

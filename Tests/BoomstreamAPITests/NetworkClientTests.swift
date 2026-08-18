@@ -110,6 +110,8 @@ struct NetworkClientTests {
         #expect(ua == "Boomstream iOS SDK v\(BoomstreamSDKInfo.version) tok")
         // config-эндпоинт без авторизации
         #expect(MockURLProtocol.recordedRequests[0].value(forHTTPHeaderField: "Authorization") == nil)
+        // медиасервер выбирает платформенную доставку по x-platform (паритет с Android)
+        #expect(MockURLProtocol.recordedRequests[0].value(forHTTPHeaderField: "x-platform") == "ios")
     }
 
     @Test func forceRefreshBypassesCache() async throws {
