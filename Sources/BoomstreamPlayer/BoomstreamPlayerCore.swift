@@ -343,7 +343,7 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         let playable = items[index]
         currentTitle = playable.title
 
-        // Во время активного cast-fallback приёмник получает cast-ссылку (AES-128)
+        // Во время активного cast-fallback приёмник получает cast-ссылку
         // вместо основной; после завершения каста возвращаемся на playable.url.
         let url = (isCastFallbackActive ? castFallbackURL : nil) ?? playable.url
         let asset = AssetFactory.makeAsset(url: url, userAgent: userAgent)
