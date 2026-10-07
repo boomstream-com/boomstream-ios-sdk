@@ -3,6 +3,7 @@
 BOOMSTREAM_API_KEY =
 BOOMSTREAM_UA_TOKEN =
 // $() — чтобы xcconfig не принял // за комментарий
+BOOMSTREAM_API_URL = https:/$()/boomstream.com/
 BOOMSTREAM_CONFIG_BASE = https:/$()/play.boomstream.com/
 BOOMSTREAM_DEMO_MEDIA_CODE =
 

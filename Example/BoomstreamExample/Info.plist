@@ -4,6 +4,8 @@
 <dict>
 	<key>BoomstreamAPIKey</key>
 	<string>$(BOOMSTREAM_API_KEY)</string>
+	<key>BoomstreamAPIURL</key>
+	<string>$(BOOMSTREAM_API_URL)</string>
 	<key>BoomstreamConfigBase</key>
 	<string>$(BOOMSTREAM_CONFIG_BASE)</string>
 	<key>BoomstreamDemoMediaCode</key>

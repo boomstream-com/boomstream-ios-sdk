@@ -30,6 +30,7 @@ targets:
         # Значения приходят из Config/Local.xcconfig (gitignored) через build settings.
         BoomstreamAPIKey: $(BOOMSTREAM_API_KEY)
         BoomstreamUAToken: $(BOOMSTREAM_UA_TOKEN)
+        BoomstreamAPIURL: $(BOOMSTREAM_API_URL)
         BoomstreamConfigBase: $(BOOMSTREAM_CONFIG_BASE)
         BoomstreamDemoMediaCode: $(BOOMSTREAM_DEMO_MEDIA_CODE)
     settings:

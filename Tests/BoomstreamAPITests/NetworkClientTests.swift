@@ -90,6 +90,18 @@ private let configFixture = Data("""
 {"code": "abc123", "mediaData": {"title": "T", "code": "abc123"}, "mediaType": "media"}
 """.utf8)
 
+/// Config-ответ с подписанной HLS-ссылкой, у конверта которой задан `exp`.
+private func signedConfigFixture(exp: TimeInterval) -> Data {
+    let envelope = Data("""
+    {"use_direct_links":"yes","is_encrypt":"yes","exp":\(Int(exp)),"intent":"stream","keys":"url"}
+    """.utf8).base64EncodedString()
+    let signedURL = "https://node.boomstream.com/adaptive/sign:abc/data:\(envelope)/abc123/playlist.m3u8"
+    let hls = Data(signedURL.utf8).base64EncodedString()
+    return Data("""
+    {"code": "abc123", "mediaData": {"title": "T", "code": "abc123", "links": {"hls": "\(hls)"}}, "mediaType": "media"}
+    """.utf8)
+}
+
 @Suite(.serialized)
 struct NetworkClientTests {
 
@@ -122,6 +134,66 @@ struct NetworkClientTests {
         _ = try await client.fetchConfig(mediaCode: "abc123", forceRefresh: true)
 
         #expect(MockURLProtocol.recordedRequests.count == 2)
+    }
+
+    @Test func signedLinkNearExpiryEvictsConfigCache() async throws {
+        // exp внутри страховочного зазора кэша → запись считается протухшей,
+        // повторный fetch идёт в сеть (иначе плеер получит гарантированный отказ).
+        MockURLProtocol.reset { _ in (200, signedConfigFixture(exp: Date().timeIntervalSince1970 + 30)) }
+        let client = makeConfigClient()
+
+        _ = try await client.fetchConfig(mediaCode: "abc123")
+        _ = try await client.fetchConfig(mediaCode: "abc123")
+
+        #expect(MockURLProtocol.recordedRequests.count == 2)
+    }
+
+    @Test func signedLinkFreshExpiryServedFromCache() async throws {
+        MockURLProtocol.reset { _ in (200, signedConfigFixture(exp: Date().timeIntervalSince1970 + 3600)) }
+        let client = makeConfigClient()
+
+        _ = try await client.fetchConfig(mediaCode: "abc123")
+        _ = try await client.fetchConfig(mediaCode: "abc123")
+
+        #expect(MockURLProtocol.recordedRequests.count == 1)
+    }
+
+    @Test func castLinkSuccessDecodesBase64Link() async throws {
+        let link = "https://node.boomstream.com/adaptive/sign:x/data:y/abc123/playlist.m3u8"
+        let b64 = Data(link.utf8).base64EncodedString()
+        MockURLProtocol.reset { request in
+            #expect(request.url?.absoluteString == "https://play.boomstream.com/api/cast/link?entity=abc123")
+            // Авторизация эндпоинта — те же заголовки, что у config.
+            #expect(request.value(forHTTPHeaderField: "x-platform") == "ios")
+            return (200, Data("{\"code\":200,\"data\":{\"link\":\"\(b64)\"}}".utf8))
+        }
+        let client = makeConfigClient(token: "tok")
+
+        let url = try await client.fetchCastLink(mediaCode: "abc123")
+
+        #expect(url.absoluteString == link)
+    }
+
+    @Test func castLinkDenialPreservesReason() async {
+        MockURLProtocol.reset { _ in
+            (403, Data("{\"code\":403,\"data\":{\"reason\":\"cast_not_allowed\"}}".utf8))
+        }
+        let client = makeConfigClient()
+
+        await #expect(throws: BoomstreamCastLinkError(reason: .castNotAllowed, rawReason: "cast_not_allowed")) {
+            _ = try await client.fetchCastLink(mediaCode: "abc123")
+        }
+    }
+
+    @Test func castLinkUnknownReasonMapsToOther() async {
+        MockURLProtocol.reset { _ in
+            (423, Data("{\"code\":423,\"data\":{\"reason\":\"zero_balance\"}}".utf8))
+        }
+        let client = makeConfigClient()
+
+        await #expect(throws: BoomstreamCastLinkError(reason: .other, rawReason: "zero_balance")) {
+            _ = try await client.fetchCastLink(mediaCode: "abc123")
+        }
     }
 
     @Test func config404MapsToMediaNotFound() async {

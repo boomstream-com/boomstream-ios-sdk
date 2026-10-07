@@ -113,6 +113,26 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
     private let airPlayBroadcast = Broadcast<Bool>()
     public var airPlayUpdates: AsyncStream<Bool> { airPlayBroadcast.stream() }
 
+    // MARK: - Cast fallback
+
+    /// Entity-код текущего `load()` — нужен эндпоинту cast-ссылки.
+    private var currentMediaCode: String?
+    /// Cast-ссылка текущего медиа; кэш на время одного `load()`.
+    private var castFallbackURL: URL?
+    /// `true` — плеер играет cast-ссылку вместо основной (AirPlay на приёмник,
+    /// не осиливший платформенное шифрование). Internal для тестов.
+    private(set) var isCastFallbackActive = false
+    /// Имена AirPlay-маршрутов, которым потребовался fallback: повторный каст на
+    /// тот же приёмник переключается сразу, без цикла ошибки. Живёт с контроллером.
+    private var castRequiredRoutes: Set<String> = []
+    private var castFallbackTask: Task<Void, Never>?
+    /// Вотчдог handoff'а: веб-приёмник (LG/Samsung) не выдаёт ошибку item —
+    /// плеер навсегда виснет в `.waitingToPlayAtSpecifiedRate` с причиной
+    /// `.noItemToPlay` (подтверждено телеметрией: Mac играет сразу, LG стоит).
+    private var castWatchdogTask: Task<Void, Never>?
+    /// Позиция, восстанавливаемая после пересоздания item (fallback и возврат с него).
+    private var pendingSeek: CMTime?
+
     private var externalPlaybackObservation: NSKeyValueObservation?
     // nonisolated(unsafe): мутация только на MainActor; чтение из deinit безопасно.
     private nonisolated(unsafe) var routeChangeObserverToken: (any NSObjectProtocol)?
@@ -184,6 +204,7 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         stopPlayback()
         self.configClient = configClient
         self.advancedOptions = advancedOptions
+        currentMediaCode = mediaCode
         // Per-call токен приоритетнее токена из BoomstreamOptions.
         let token = allowClearKeyDRMToken ?? configClient.userAgentToken
         userAgent = BoomstreamSDKInfo.userAgent(token: token)
@@ -231,6 +252,16 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         subtitleDiscoveryTask = nil
         artworkTask?.cancel()
         artworkTask = nil
+        castFallbackTask?.cancel()
+        castFallbackTask = nil
+        castWatchdogTask?.cancel()
+        castWatchdogTask = nil
+        castFallbackURL = nil
+        isCastFallbackActive = false
+        pendingSeek = nil
+        currentMediaCode = nil
+        // castRequiredRoutes намеренно переживает load() — память о приёмниках
+        // действует всё время жизни контроллера.
         detachCurrentItemObservers()
         player.replaceCurrentItem(with: nil)
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
@@ -312,7 +343,10 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
         let playable = items[index]
         currentTitle = playable.title
 
-        let asset = AssetFactory.makeAsset(url: playable.url, userAgent: userAgent)
+        // Во время активного cast-fallback приёмник получает cast-ссылку (AES-128)
+        // вместо основной; после завершения каста возвращаемся на playable.url.
+        let url = (isCastFallbackActive ? castFallbackURL : nil) ?? playable.url
+        let asset = AssetFactory.makeAsset(url: url, userAgent: userAgent)
         let item = AVPlayerItem(asset: asset)
         item.preferredForwardBufferDuration = advancedOptions.preferredForwardBufferDuration
         player.automaticallyWaitsToMinimizeStalling = advancedOptions.automaticallyWaitsToMinimizeStalling
@@ -440,6 +474,10 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
     private func handleStatusChange(_ status: AVPlayerItem.Status, errorText: String?) {
         switch status {
         case .readyToPlay:
+            if let seek = pendingSeek {
+                pendingSeek = nil
+                player.seek(to: seek, toleranceBefore: .zero, toleranceAfter: .positiveInfinity)
+            }
             state = .ready(
                 title: currentTitle,
                 isPlaylist: isPlaylistMode,
@@ -453,25 +491,141 @@ public final class BoomstreamPlayerCore: BoomstreamPlayerController {
             discoverAudioTracks()
             discoverSubtitleTracks()
         case .failed:
-            state = .error(message: errorText ?? "Playback failed")
+            #if DEBUG
+            print("[BSP] item FAILED airPlaying=\(isAirPlaying) err=\(errorText ?? "-") shouldFallback=\(shouldAttemptCastFallback)")
+            #endif
+            // Ошибка item во время AirPlay — сигнатура приёмника, не осилившего
+            // платформенное шифрование (веб-приёмники LG/Samsung останавливаются
+            // на манифесте): пробуем cast-ссылку, прежде чем сдаваться.
+            if shouldAttemptCastFallback {
+                startCastFallback(originalError: errorText)
+            } else {
+                state = .error(message: errorText ?? "Playback failed")
+            }
         default:
             break
         }
+    }
+
+    // MARK: - Cast fallback (logic)
+
+    private var shouldAttemptCastFallback: Bool {
+        isAirPlaying && !isCastFallbackActive && !isPlaylistMode && !isLiveContent
+            && currentMediaCode != nil && configClient is BoomstreamCastLinkFetching
+    }
+
+    /// Детектор зависшего handoff'а: веб-приёмники (LG/Samsung) не играют
+    /// платформенное шифрование, но и ошибки item не порождают — AVPlayer
+    /// застревает в `.waitingToPlayAtSpecifiedRate` / `.noItemToPlay`
+    /// (на успешном приёмнике статус — `.playing`, время идёт). Три секунды
+    /// подряд в этом состоянии → переключаемся на cast-ссылку.
+    private func startCastWatchdog() {
+        castWatchdogTask?.cancel()
+        guard shouldAttemptCastFallback else { return }
+        castWatchdogTask = Task { [weak self] in
+            var strikes = 0
+            for _ in 0..<15 {
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                guard !Task.isCancelled, let self,
+                      self.isAirPlaying, !self.isCastFallbackActive
+                else { return }
+                let stuck = self.player.timeControlStatus == .waitingToPlayAtSpecifiedRate
+                    && self.player.reasonForWaitingToPlay == .noItemToPlay
+                strikes = stuck ? strikes + 1 : 0
+                if strikes >= 3 {
+                    #if DEBUG
+                    print("[BSP] watchdog: receiver stuck (noItemToPlay ×3) → cast fallback")
+                    #endif
+                    self.startCastFallback(originalError: nil)
+                    return
+                }
+            }
+        }
+    }
+
+    private func startCastFallback(originalError: String?) {
+        castWatchdogTask?.cancel()
+        castWatchdogTask = nil
+        guard let mediaCode = currentMediaCode,
+              let fetcher = configClient as? BoomstreamCastLinkFetching
+        else {
+            state = .error(message: originalError ?? "Playback failed")
+            return
+        }
+        state = .loading
+        let resumeAt = player.currentTime()
+        castFallbackTask?.cancel()
+        castFallbackTask = Task { [weak self] in
+            do {
+                let url = try await fetcher.fetchCastLink(mediaCode: mediaCode)
+                guard !Task.isCancelled, let self else { return }
+                self.activateCastFallback(url: url, resumeAt: resumeAt)
+            } catch {
+                guard !Task.isCancelled, let self else { return }
+                if let castError = error as? BoomstreamCastLinkError,
+                   castError.reason == .castNotAllowed {
+                    // Владелец проекта не разрешил каст защищённого — говорим прямо.
+                    self.state = .error(message: BoomstreamMessages.resolve(
+                        "bsp_cast_not_allowed", locale: self.advancedOptions.locale))
+                } else {
+                    // Fallback не состоялся — исходная ошибка воспроизведения честнее.
+                    self.state = .error(message: originalError ?? "Playback failed")
+                }
+            }
+        }
+    }
+
+    private func activateCastFallback(url: URL, resumeAt: CMTime) {
+        castFallbackURL = url
+        isCastFallbackActive = true
+        if let route = airPlayDeviceName { castRequiredRoutes.insert(route) }
+        if resumeAt.isValid, !resumeAt.isIndefinite, resumeAt.seconds > 0 { pendingSeek = resumeAt }
+        playItem(at: currentIndex)
     }
 
     // MARK: - AirPlay callbacks
 
     // Internal (not private) so simulator tests can inject state via @testable import.
     func handleExternalPlaybackChange(_ active: Bool) {
+        #if DEBUG
+        print("[BSP] externalPlayback=\(active) route=\(airPlayDeviceName ?? "-") fallback=\(isCastFallbackActive)")
+        #endif
         isAirPlaying = active
         airPlayBroadcast.yield(active)
-        if !active { airPlayDeviceName = nil }
+        if active {
+            startCastWatchdog()
+        } else {
+            castWatchdogTask?.cancel()
+            castWatchdogTask = nil
+            airPlayDeviceName = nil
+            if isCastFallbackActive {
+                // Каст закончился — возвращаемся на основную ссылку: локальное
+                // воспроизведение снова с платформенным шифрованием (защита кадра).
+                castFallbackTask?.cancel()
+                castFallbackTask = nil
+                isCastFallbackActive = false
+                let resumeAt = player.currentTime()
+                if resumeAt.isValid, !resumeAt.isIndefinite, resumeAt.seconds > 0 {
+                    pendingSeek = resumeAt
+                }
+                playItem(at: currentIndex)
+            }
+        }
     }
 
     private func handleRouteChange() {
         #if os(iOS)
         let outputs = AVAudioSession.sharedInstance().currentRoute.outputs
         airPlayDeviceName = outputs.first(where: { $0.portType == .airPlay })?.portName
+        #if DEBUG
+        print("[BSP] routeChange outputs=\(outputs.map { "\($0.portType.rawValue):\($0.portName)" }) airPlaying=\(isAirPlaying) extActive=\(player.isExternalPlaybackActive)")
+        #endif
+        // Повторный каст на приёмник, уже потребовавший fallback в этой сессии, —
+        // переключаемся сразу, не дожидаясь цикла ошибки item.
+        if let route = airPlayDeviceName, castRequiredRoutes.contains(route),
+           shouldAttemptCastFallback {
+            startCastFallback(originalError: nil)
+        }
         #endif
     }
 

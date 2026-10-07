@@ -16,6 +16,10 @@ enum BoomstreamMessages {
         "subtitles_off":           ["en": "Off",           "ru": "Выкл"],
         "bsp_airplay_casting_to":  ["en": "Casting to",   "ru": "Трансляция на"],
         "bsp_airplay_casting_none": ["en": "Casting to TV", "ru": "Трансляция на ТВ"],
+        "bsp_cast_not_allowed": [
+            "en": "Casting is not available for this content",
+            "ru": "Трансляция недоступна для этого контента",
+        ],
     ]
 
     /// Returns the localized string for `key` in the given `locale` (ISO 639-1 code, e.g. "ru", "en").

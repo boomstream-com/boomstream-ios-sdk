@@ -21,3 +21,6 @@ Config.xcconfig
 
 # Example app secrets
 Example/Config/Local.xcconfig
+
+# Example build artifacts (xcodebuild -derivedDataPath build) — содержат Info.plist с подставленными ключами
+/Example/build/

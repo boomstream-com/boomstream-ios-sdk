@@ -75,6 +75,20 @@ final class BoomstreamHTTPClient: Sendable {
         }
     }
 
+    /// GET, отдающий тело и при не-2xx статусе: нужен эндпоинтам, различающим
+    /// отказы машиночитаемым `reason` в теле (cast-ссылка), где обычный маппинг
+    /// 401/403 → `.unauthorised` терял бы причину.
+    func getRaw(_ url: URL) async throws -> (data: Data, statusCode: Int) {
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        for (name, value) in defaultHeaders {
+            request.setValue(value, forHTTPHeaderField: name)
+        }
+        let (data, response) = try await send(request)
+        return (data, response.statusCode)
+    }
+
     private func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         var attempt = 1
         while true {

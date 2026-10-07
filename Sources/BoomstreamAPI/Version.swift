@@ -1,6 +1,6 @@
 public enum BoomstreamSDKInfo {
     /// Single source of truth: release-gate сверяет это значение с git-тегом (docs/SDK_ARCHITECTURE.md §10).
-    public static let version = "0.4.0"
+    public static let version = "0.5.0"
 
     /// База User-Agent строки; `ua_allow`-токен добавляется через `BoomstreamOptions.userAgentToken`.
     public static var userAgentBase: String { "Boomstream iOS SDK v\(version)" }

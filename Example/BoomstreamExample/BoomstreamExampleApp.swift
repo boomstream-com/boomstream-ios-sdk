@@ -27,6 +27,8 @@ enum AppEnvironment {
         let apiKey = infoValue("BoomstreamAPIKey")
         let options = BoomstreamOptions(
             userAgentToken: infoValue("BoomstreamUAToken"),
+            apiBaseURL: infoValue("BoomstreamAPIURL")
+                .flatMap(URL.init(string:)) ?? URL(string: "https://boomstream.com/")!,
             configBaseURL: infoValue("BoomstreamConfigBase")
                 .flatMap(URL.init(string:)) ?? URL(string: "https://play.boomstream.com/")!
         )
